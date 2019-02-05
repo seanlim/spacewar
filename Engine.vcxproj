@@ -31,10 +31,6 @@
     <ClInclude Include="ecs\component.h" />
     <ClInclude Include="ecs\ecs.h" />
     <ClInclude Include="ecs\system.h" />
-    <ClInclude Include="src\breakout.h" />
-    <ClInclude Include="src\constants.h" />
-    <ClInclude Include="src\playerControls.h" />
-    <ClInclude Include="src\tileMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\game.cpp" />
@@ -48,7 +44,6 @@
     <ClCompile Include="core\textureManager.cpp" />
     <ClCompile Include="ecs\component.cpp" />
     <ClCompile Include="ecs\ecs.cpp" />
-    <ClCompile Include="src\breakout.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{33E73CAB-07ED-4935-94E8-EBA94E8DEDC1}</ProjectGuid>
