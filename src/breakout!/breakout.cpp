@@ -2,30 +2,37 @@
 
 Breakout::Breakout() {}
 
-Breakout::~Breakout() { this->releaseAll(); }
-
-void Breakout::initialise(HWND hwnd)
+Breakout::~Breakout()
 {
-  Game::initialise(hwnd);
+  this->tileTexture.onLostDevice();
+  this->tileTexture.onResetDevice();
+}
 
+void Breakout::setupSystems()
+{
   // Set collision system bounds
   collisionSystem->setBounds({marginX, 0, GAME_WIDTH - marginX, GAME_HEIGHT});
 
   // Tile map system
-  SBreakOutTileMap* tileMapSystem = new SBreakOutTileMap(
-      this->hwnd, GAME_WIDTH, GAME_HEIGHT, FULLSCREEN, this->graphics);
-  graphicsSystems.addSystem(*tileMapSystem);
+  tileMapSystem = new SBreakOutTileMap(this->hwnd, GAME_WIDTH, GAME_HEIGHT,
+                                       FULLSCREEN, graphics);
+  graphicsSystems->addSystem(*tileMapSystem);
 
   // Player controls
-  SPlayerControlled* playerControlSystem = new SPlayerControlled(input);
-  gameSystems.addSystem(*playerControlSystem);
-
+  playerControlSystem = new SPlayerControlled(input);
+  gameSystems->addSystem(*playerControlSystem);
+}
+void Breakout::setupTextures()
+{
   // Load textures
   if (!tileTexture.initialise(graphics, TILE_IMAGE))
     Logger::error("Failed to load tile textures");
   if (!paddleBallTexture.initialise(graphics, PADDLE_BALL))
     Logger::error("Failed to load paddle and ball textures");
+}
 
+void Breakout::setupEntities()
+{
   // Init tile sprite
   CSprite tileSprite;
   tileSprite.startFrame = 0, tileSprite.endFrame = 0,
@@ -49,7 +56,7 @@ void Breakout::initialise(HWND hwnd)
   ballCollision.collisionResponse = BOUNCE;
   CTileMapCollider tileMapCollider;
 
-  ecs.makeEntity(ballSprite, ballMotion, ballCollision, tileMapCollider);
+  ecs->makeEntity(ballSprite, ballMotion, ballCollision, tileMapCollider);
 
   // Init paddle
   CSprite paddleSprite;
@@ -63,20 +70,13 @@ void Breakout::initialise(HWND hwnd)
   CCollidable paddleCollision;
   paddleCollision.collisionType = ORIENTED_BOX;
   paddleCollision.collisionResponse = NONE;
-  ecs.makeEntity(paddleControls, paddleSprite, paddleMotion, paddleCollision);
+  ecs->makeEntity(paddleControls, paddleSprite, paddleMotion, paddleCollision);
 
   return;
 }
 
-void Breakout::resetAll()
+void Breakout::render()
 {
-  this->tileTexture.onResetDevice();
-  Game::resetAll();
-  return;
-}
-void Breakout::releaseAll()
-{
-  this->tileTexture.onLostDevice();
-  Game::releaseAll();
-  return;
+  // graphics->spriteBegin();
+  // graphics->spriteEnd();
 }

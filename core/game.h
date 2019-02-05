@@ -9,10 +9,12 @@
 #include <string>
 
 #include "common.h"
+#include "stack.h"
 #include "gameError.h"
 #include "graphics.h"
 #include "input.h"
 #include "text.h"
+#include "scene.h"
 #include "ecs.h"
 #include "systems/physics.h"
 #include "systems/renderable.h"
@@ -56,10 +58,7 @@ protected:
   SystemList gameSystems;
   SystemList graphicsSystems;
 
-  // Core systems
-  SRenderable* renderSystem;
-  SPhysics* physicsSystem;
-  SCollision* collisionSystem;
+  Stack<Scene*> navigationStack;
 
 public:
   Game();
@@ -72,6 +71,7 @@ public:
   void handleInput(WPARAM, LPARAM, UINT);
 
   virtual void initialise(HWND hwnd);
+  virtual void setupRootScene() = 0;
   virtual void run(HWND);
   virtual void releaseAll();
   virtual void resetAll();
@@ -79,10 +79,8 @@ public:
   virtual void renderGame();
   virtual void handleLostGraphicsDevice();
 
-  virtual void render() = 0;
-  virtual void update() = 0;
-  virtual void ai() = 0;
-  virtual void collisions() = 0;
+  void setScene(Scene* scene);
+  void dismissCurrentScene();
 
   void exitGame();
 };

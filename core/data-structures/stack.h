@@ -1,26 +1,27 @@
+#pragma once
 template <class T> class Stack
 {
   struct Node {
     Node* next;
     T item;
   };
-  Node* top;
+  Node* topNode;
   int size;
 
 public:
   Stack()
   {
-    top = nullptr;
+    topNode = nullptr;
     size = 0;
   }
   ~Stack()
   {
     Node* tNode;
 
-    while (top) {
-      tNode = top;
-      delete top;
-      top = tNode->next;
+    while (topNode) {
+      tNode = topNode;
+      delete topNode;
+      topNode = tNode->next;
     }
   }
 
@@ -28,9 +29,9 @@ public:
   {
     Node* n = new Node;
     n->item = value;
-    n->next = top;
+    n->next = topNode;
 
-    top = n;
+    topNode = n;
 
     size++;
   }
@@ -38,12 +39,21 @@ public:
   T pop()
   {
     if (!isEmpty()) {
-      T val = top->item;
-      Node* tNode = top;
-      delete top;
-      top = tNode->next;
+      T val = topNode->item;
+      Node* tNode = topNode;
+      delete topNode;
+      topNode = tNode->next;
       size -= 1;
       return val;
+    } else {
+      return 0;
+    }
+  }
+
+  T top()
+  {
+    if (!isEmpty()) {
+      return topNode->item;
     } else {
       return 0;
     }

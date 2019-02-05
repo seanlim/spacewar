@@ -23,6 +23,7 @@
     <ClInclude Include="core\math\lerp.h" />
     <ClInclude Include="core\math\random.h" />
     <ClInclude Include="core\math\vector2.h" />
+    <ClInclude Include="core\scene.h" />
     <ClInclude Include="core\systems\collision.h" />
     <ClInclude Include="core\systems\physics.h" />
     <ClInclude Include="core\systems\renderable.h" />

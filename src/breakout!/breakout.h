@@ -4,23 +4,25 @@
 #include "common.h"
 #include "constants.h"
 #include "ecs.h"
-#include "game.h"
 #include "playerControls.h"
+#include "scene.h"
 #include "textureManager.h"
 #include "tileMap.h"
 
-class Breakout : public Game
+class Breakout : public Scene
 {
   TextureManager tileTexture, paddleBallTexture;
+
+  SBreakOutTileMap* tileMapSystem;
+  SPlayerControlled* playerControlSystem;
 
 public:
   Breakout();
   virtual ~Breakout();
-  void initialise(HWND);
-  void update() {}
-  void ai() {}
-  void collisions() {}
-  void render() {}
-  void releaseAll();
-  void resetAll();
+
+  void setupSystems();
+  void setupTextures();
+  void setupEntities();
+
+  void render();
 };

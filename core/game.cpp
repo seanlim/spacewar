@@ -90,25 +90,9 @@ void Game::initialise(HWND _hwnd)
 
   gameText.setFontColor(gameNS::FONT_COLOR);
 
-  // Attach game to ECS (for logging)
-
-  Logger::println("Initialise graphics system...");
-  // Init graphics
-  renderSystem = new SRenderable(this->hwnd, GAME_WIDTH, GAME_HEIGHT,
-                                 FULLSCREEN, this->graphics);
-  graphicsSystems.addSystem(*renderSystem);
-
-  Logger::println("Initialise physics system ...");
-  // Init physics
-  physicsSystem = new SPhysics();
-  gameSystems.addSystem(*physicsSystem);
-
-  Logger::println("Initialise collision system ...");
-  // Init collision
-  collisionSystem = new SCollision();
-  gameSystems.addSystem(*collisionSystem);
-
   initialised = true;
+
+  setupRootScene();
   Logger::println((std::to_string(graphicsSystems.size()) +
                    " graphics systems initialised"));
   Logger::println(
@@ -144,8 +128,8 @@ void Game::renderGame()
     // Call graphics system
     ecs.updateSystems(graphicsSystems, frameTime);
 
-    // ENABLE THIS if a custom graphical SystemList is needed...
-    // this->render();
+    // In-game renders
+    navigationStack.top()->render();
 
     // Draw HUD
     graphics->spriteBegin();
@@ -205,11 +189,11 @@ void Game::run(HWND hwnd)
   }
 
   if (!paused) {
-    this->update();
-    this->ai();
-    this->collisions();
     this->input->vibrateControllers(frameTime);
   }
+
+  // Update current scene's delta
+  navigationStack.top()->delta = frameTime;
 
   // TEMP
   // move this to somewhere more intentional
@@ -219,6 +203,25 @@ void Game::run(HWND hwnd)
 
   this->input->readControllers();
   this->input->pollKeys();
+}
+
+void Game::setScene(Scene* scene)
+{
+  if (navigationStack.top() != 0) navigationStack.top()->detach();
+
+  scene->initialise(hwnd, graphics, input, &ecs, &gameSystems,
+                    &graphicsSystems);
+
+  navigationStack.push(scene);
+}
+
+void Game::dismissCurrentScene()
+{
+  Scene* scene = navigationStack.top();
+  scene->detach();
+  delete (scene);
+
+  navigationStack.top()->attach();
 }
 
 void Game::releaseAll() {}
