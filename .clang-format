@@ -1,0 +1,13 @@
+---
+Language: Cpp
+DerivePointerAlignment: false
+PointerAlignment: Left
+AlignOperands: true
+AllowShortFunctionsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+CompactNamespaces: true
+BreakBeforeBraces: Linux
+IncludeBlocks: Preserve  
+...
+
