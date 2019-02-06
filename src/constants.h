@@ -1,9 +1,6 @@
 #pragma once
 
 #define marginX 480
-#define rows 7
-#define columns 10
-#define tileSize 32
 
 // Image resources
 const char BACKGROUND[] = "assets\\bg.png";
@@ -20,7 +17,7 @@ const unsigned int HURRICANE_COLS = 1;
 const unsigned int HURRICANE_WIDTH = 200;
 const unsigned int HURRICANE_HEIGHT = 200;
 
-const unsigned int PLANET_COLS = ;
+const unsigned int PLANET_COLS = 1;
 const unsigned int PLANET_WIDTH = 1000;
 const unsigned int PLANET_HEIGHT = 1000;
 

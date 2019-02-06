@@ -24,6 +24,7 @@
     <ClInclude Include="core\math\random.h" />
     <ClInclude Include="core\math\vector2.h" />
     <ClInclude Include="core\scene.h" />
+    <ClInclude Include="core\systems\animation.h" />
     <ClInclude Include="core\systems\collision.h" />
     <ClInclude Include="core\systems\physics.h" />
     <ClInclude Include="core\systems\renderable.h" />
@@ -32,6 +33,8 @@
     <ClInclude Include="ecs\component.h" />
     <ClInclude Include="ecs\ecs.h" />
     <ClInclude Include="ecs\system.h" />
+    <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\menu.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\game.cpp" />
