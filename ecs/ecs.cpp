@@ -47,7 +47,7 @@ void ECS::removeEntity(EntityHook hook)
 
   int d = entityIDFrom(hook);
   int s = entities.size() - 1;
-  delete entities[s];
+  delete entities[d];
   entities[d] = entities[s];
   entities[d]->first = d;
   entities.pop_back();
