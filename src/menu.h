@@ -42,8 +42,8 @@ public:
                            GAME_HEIGHT / 2 - shipSprite.getHeight() / 2);
     CAnimated shipAnimation;
     shipAnimation.animationType = SCALE;
-    shipAnimation.startValue = 1.0, shipAnimation.endValue = 1.8,
-    shipAnimation.reverses = true, shipAnimation.rate = 0.025;
+    shipAnimation.startValue = 1.0, shipAnimation.endValue = 1.3,
+    shipAnimation.reverses = true, shipAnimation.rate = 0.06;
     ecs->makeEntity(shipSprite, shipAnimation);
   }
 

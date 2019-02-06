@@ -32,6 +32,7 @@ public:
 
     switch (animation->animationType) {
     case SCALE:
+      const float start = animation->startValue;
       const float newScale =
           lerp(sprite->getScale(), animation->endValue, animation->rate);
       const float scaleDiff = newScale - sprite->getScale();
@@ -43,12 +44,11 @@ public:
       sprite->setPosition(sprite->getX() - diffX / 2,
                           sprite->getY() - diffY / 2);
 
-      if (abs(sprite->getScale() - animation->endValue) < 0.05) {
-        sprite->setScale(animation->endValue);
+      if (abs(sprite->getScale() - animation->endValue) < 0.01) {
         // Animation has ended
         if (animation->reverses) {
-          animation->endValue = animation->startValue;
-          animation->startValue = sprite->getScale();
+          animation->startValue = animation->endValue;
+          animation->endValue = start;
         } else if (animation->repeats)
           sprite->setScale(animation->startValue);
       }
