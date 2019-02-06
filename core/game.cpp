@@ -90,6 +90,17 @@ void Game::initialise(HWND _hwnd)
 
   gameText.setFontColor(gameNS::FONT_COLOR);
 
+  Logger::println("Initialise graphics system...");
+  renderSystem = new SRenderable(hwnd, GAME_WIDTH, GAME_HEIGHT, FULLSCREEN,
+                                 this->graphics);
+  graphicsSystems.addSystem(*renderSystem);
+  Logger::println("Initialise physics system ...");
+  physicsSystem = new SPhysics();
+  gameSystems.addSystem(*physicsSystem);
+  Logger::println("Initialise collision system ...");
+  collisionSystem = new SCollision();
+  gameSystems.addSystem(*collisionSystem);
+
   initialised = true;
 
   setupRootScene();
@@ -209,7 +220,7 @@ void Game::setScene(Scene* scene)
 {
   if (navigationStack.top() != 0) navigationStack.top()->detach();
 
-  scene->initialise(hwnd, graphics, input, &ecs, &gameSystems,
+  scene->initialise(hwnd, this, graphics, input, &ecs, &gameSystems,
                     &graphicsSystems);
 
   navigationStack.push(scene);

@@ -5,6 +5,7 @@
 #include "input.h"
 #include "math/lerp.h"
 #include "scene.h"
+#include "stage.h"
 #include "systems/animation.h"
 
 struct CMenuShipSelectControlled : Component<CMenuShipSelectControlled> {
@@ -13,14 +14,18 @@ struct CMenuShipSelectControlled : Component<CMenuShipSelectControlled> {
 class SMenuShipSelect : public System
 {
   Input* input;
+  Stage* stageScene;
+  Game* game;
 
 public:
-  SMenuShipSelect(Input* _input) : System()
+  SMenuShipSelect(Input* _input, Stage* _stageScene, Game* _game) : System()
   {
     System::addComponentType(CMenuShipSelectControlled::id);
     System::addComponentType(CSprite::id);
 
     this->input = _input;
+    this->stageScene = _stageScene;
+    this->game = _game;
   }
   virtual void updateComponents(float delta, BaseComponent** components)
   {
@@ -37,6 +42,10 @@ public:
         shipSprite->currentFrame += 1;
       shipSprite->setRect();
     }
+
+    if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
+      game->setScene(stageScene);
+    }
   }
 };
 
@@ -46,21 +55,43 @@ class Menu : public Scene
   TextureManager backgroundTexture, spaceShipTexture, angleIconTexture,
       promptTexture, gameTitleTexture;
 
+  // Systems
   SAnimation* menuAnimation;
   SMenuShipSelect* menuShipSelect;
 
-  CSprite rightKeySprite, leftKeySprite, promptSprite, titleSprite;
+  // Components
+  CSprite backgroundImage, shipSprite, rightKeySprite, leftKeySprite,
+      promptSprite, titleSprite;
+  CAnimated shipAnimation;
+  CMenuShipSelectControlled shipSelectControls;
+
+  // Entities
+  EntityHook background;
+  EntityHook spaceship;
+  EntityHook title;
+
+  Stage* stageScene = new Stage();
 
 public:
-  Menu() {}
-  ~Menu();
+  Menu() : Scene() {}
+  ~Menu()
+  {
+    backgroundTexture.onLostDevice();
+    backgroundTexture.onResetDevice();
+    spaceShipTexture.onLostDevice();
+    spaceShipTexture.onResetDevice();
+    angleIconTexture.onLostDevice();
+    angleIconTexture.onResetDevice();
+    promptTexture.onLostDevice();
+    promptTexture.onResetDevice();
+    gameTitleTexture.onLostDevice();
+    gameTitleTexture.onResetDevice();
+  }
 
   void setupSystems()
   {
     menuAnimation = new SAnimation();
-    gameSystems->addSystem(*menuAnimation);
-    menuShipSelect = new SMenuShipSelect(input);
-    gameSystems->addSystem(*menuShipSelect);
+    menuShipSelect = new SMenuShipSelect(input, stageScene, game);
   }
 
   void setupTextures()
@@ -80,7 +111,6 @@ public:
   void setupEntities()
   {
 
-    CSprite backgroundImage;
     backgroundImage.startFrame = 0, backgroundImage.endFrame = 0,
     backgroundImage.currentFrame = 0;
     backgroundImage.animates = false;
@@ -88,9 +118,7 @@ public:
                                BACKGROUND_COLS, &backgroundTexture);
     backgroundImage.setScale(0.5);
     backgroundImage.setPosition(0, 0);
-    ecs->makeEntity(backgroundImage);
 
-    CSprite shipSprite;
     shipSprite.startFrame = 0, shipSprite.endFrame = 9,
     shipSprite.currentFrame = 0;
     shipSprite.animates = false;
@@ -99,12 +127,9 @@ public:
     shipSprite.setScale(1.5);
     shipSprite.setPosition(GAME_WIDTH / 2 - shipSprite.getWidth() / 2,
                            (GAME_HEIGHT / 2 - shipSprite.getHeight() / 2) + 70);
-    CAnimated shipAnimation;
     shipAnimation.animationType = SCALE;
     shipAnimation.startValue = 1.5, shipAnimation.endValue = 1.7,
     shipAnimation.reverses = true, shipAnimation.rate = 0.06;
-    CMenuShipSelectControlled shipSelectControls;
-    ecs->makeEntity(shipSprite, shipAnimation, shipSelectControls);
 
     // Setup GUI, etc
     titleSprite.startFrame = 0, titleSprite.endFrame = 2;
@@ -115,8 +140,6 @@ public:
     titleSprite.frameDelay = 0.1;
     titleSprite.setScale(0.7);
     titleSprite.setPosition(GAME_WIDTH / 2 - titleSprite.getWidth() / 2, 50);
-
-    ecs->makeEntity(titleSprite);
 
     rightKeySprite.currentFrame = 1;
     rightKeySprite.animates = false;
@@ -162,5 +185,26 @@ public:
     graphics->drawSprite(promptSprite.spriteData);
 
     graphics->spriteEnd();
+  }
+
+  void attach()
+  {
+    gameSystems->addSystem(*menuAnimation);
+    gameSystems->addSystem(*menuShipSelect);
+    background = ecs->makeEntity(backgroundImage);
+    spaceship = ecs->makeEntity(shipSprite, shipAnimation, shipSelectControls);
+    title = ecs->makeEntity(titleSprite);
+    Scene::attach();
+  }
+
+  void detach()
+  {
+
+    gameSystems->removeSystem(*menuAnimation);
+    gameSystems->removeSystem(*menuShipSelect);
+    ecs->removeEntity(background);
+    ecs->removeEntity(spaceship);
+    ecs->removeEntity(title);
+    Scene::detach();
   }
 };

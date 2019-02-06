@@ -27,6 +27,7 @@ const int POINT_SIZE = 15;
 const COLOR_ARGB FONT_COLOR = graphicsNS::WHITE;
 } // namespace gameNS
 
+class Scene;
 class Game
 {
 protected:
@@ -57,6 +58,11 @@ protected:
   // System lists
   SystemList gameSystems;
   SystemList graphicsSystems;
+
+  // Core Systems
+  SRenderable* renderSystem;
+  SPhysics* physicsSystem;
+  SCollision* collisionSystem;
 
   Stack<Scene*> navigationStack;
 
