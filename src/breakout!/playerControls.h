@@ -29,10 +29,10 @@ public:
     CMotion* motion = (CMotion*)components[1];
 
     if (playerControlledEntity->enabled) {
-      if (input->getKeyboardKeyState(VK_LEFT)) {
+      if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
         motion->velocity.x += -50.0;
       }
-      if (input->getKeyboardKeyState(VK_RIGHT)) {
+      if (input->getKeyboardKeyState(VK_RIGHT) == JustPressed) {
         motion->velocity.x += 50.0;
       }
     }

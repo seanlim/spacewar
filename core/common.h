@@ -13,10 +13,10 @@ const float MIN_FRAME_RATE = 10.0f;
 const float MIN_FRAME_TIME = 1.0f / FRAME_RATE;
 const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_RATE;
 const char CLASS_NAME[] = "Ponyo";
-const char GAME_TITLE[] = "Breakout!";
+const char GAME_TITLE[] = "SPACE WAR";
 const bool FULLSCREEN = false; // windowed or fullscreen
-const UINT GAME_WIDTH = 1280;  // width of game in pixels
-const UINT GAME_HEIGHT = 720;  // height of game in pixels
+const UINT GAME_WIDTH = 1024;  // width of game in pixels
+const UINT GAME_HEIGHT = 768;  // height of game in pixels
 
 // Typedefs
 typedef unsigned int uint32;
