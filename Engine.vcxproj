@@ -34,7 +34,9 @@
     <ClInclude Include="ecs\ecs.h" />
     <ClInclude Include="ecs\system.h" />
     <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\enemy.h" />
     <ClInclude Include="src\menu.h" />
+    <ClInclude Include="src\playerControls.h" />
     <ClInclude Include="src\stage.h" />
   </ItemGroup>
   <ItemGroup>
