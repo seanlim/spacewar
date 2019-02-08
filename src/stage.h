@@ -19,12 +19,13 @@ class Stage : public Scene
   SPlayerControlled* playerControlSystem;
 
 public:
+
   Stage() : Scene() {}
   ~Stage();
 
   void setupSystems() 
   {
-	  // Enemy System
+	  // Enemy system
 	  enemySystem = new SEnemy(graphics);
 	  graphicsSystems->addSystem(*enemySystem);
 
@@ -41,8 +42,6 @@ public:
       Logger::error("Failed to load ships texture");
 	if (!enemyTexture.initialise(graphics, ENEMY_ONE))
 	  Logger::error("Failed to load enemy texture");
-
-	Logger::println("Test");
   }
 
   void setupEntities() 
@@ -52,12 +51,13 @@ public:
 	  enemySprite.startFrame = 0, enemySprite.endFrame = 1,
 		  enemySprite.currentFrame = 0;
 	  enemySprite.initialise(16, 16, 2, &enemyTexture);
-	  enemySprite.setScale(2.5);
+	  enemySprite.setScale(2);
+	  //enemySprite.setPosition(GAME_WIDTH / 2, 0); //uhh temporary solution until i figure out how to make proper entities
 	  enemySystem->enemySprite = enemySprite;
-	  CMotion enemyMotion;
-	  enemyMotion.velocity = Vec2(0.0, 200);
-	  enemyMotion.friction = 0.0;
-	  enemySystem->enemyMotion = enemyMotion;
+	  //CMotion enemyMotion;
+	  //enemyMotion.velocity = Vec2(0, 100.0);
+	  //enemyMotion.friction = 0.0;
+	  //ecs->makeEntity(enemySprite, enemyMotion);
 
 	  // Init player
 	  CSprite playerSprite;
@@ -73,7 +73,7 @@ public:
 	  playerCollision.collisionResponse = NONE;
 	  CEnemyInteractable enemyCollider;
 
-	  ecs->makeEntity(playerControls, playerSprite, playerMotion, enemyCollider);
+	  ecs->makeEntity(playerControls, playerSprite, playerMotion, playerCollision, enemyCollider); // uhhh 5 components i hope it's ok
 
 	  return;
   }

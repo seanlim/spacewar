@@ -13,10 +13,11 @@ class SEnemy : public System
 {
 private:
 	Graphics * graphics;
+	int MIN_MAX_RAND(int min, int max) { return rand() % (max - min + 1) + min; }
+	int enemyMap[20][1]; // row, column
 
 public:
 	CSprite enemySprite;
-	CMotion enemyMotion;
 
 	SEnemy(Graphics* _graphics) : System()
 	{
@@ -25,17 +26,17 @@ public:
 		System::addComponentType(CEnemyInteractable::id);
 
 		this->graphics = _graphics;
-		//setEnemyLocation(1);
+		setEnemies(1);
 	}
 
-	//inline void setEnemyLocation(int value)
-	//{
-	//	for (int row = 0; row < rows; row++) {
-	//		for (int column = 0; column < columns; column++) {
-	//			enemyMap[row][column] = 1;
-	//		}
-	//	}
-	//}
+	inline void setEnemies(int value)
+	{
+		for (int row = 0; row < 1; row++) {
+			for (int column = 0; column < 20; column++) {
+				enemyMap[row][column] = 1;
+			}
+		}
+	}
 
 	virtual void updateComponents(float delta, BaseComponent** components)
 	{
@@ -43,26 +44,36 @@ public:
 		CCollidable* collider = (CCollidable*)components[1];
 		CEnemyInteractable* enemyInteractable = (CEnemyInteractable*)components[2];
 
-		// Draw enemies
-		enemySprite.setPosition(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-		Logger::println("HELLO PLES LOG");
+		for (int column = 0; column < 20; column++) {
+			for (int row = 0; row < 1; row++) {
 
-		graphics->spriteBegin();
-		enemySprite.spriteData.texture = enemySprite.textureManager->getTexture();
-		graphics->drawSprite(enemySprite.spriteData);
-		graphics->spriteEnd();
+				enemySprite.setPosition((column * 64), (row * 64));
 
-		// Check collision
-		CCollidable enemyCollider;
-		enemyCollider.angle = enemySprite.getAngle();
-		enemyCollider.center = *enemySprite.getCenter();
-		enemyCollider.scale = enemySprite.getScale();
+				if (enemyMap[row][column] == 1) {
 
-		Vec2 collisionVector = Vec2(0, 0);
-		if (collider->collideBox(enemyCollider, collisionVector) == true) {
-			motion->collidedDelta =
-				collider->bounce(enemyCollider, collisionVector);
-			motion->colliding = true;
+					// Draw enemies
+					//enemySprite.setPosition(MIN_MAX_RAND(0, GAME_WIDTH - 64), 0);
+
+					graphics->spriteBegin();
+					enemySprite.spriteData.texture = enemySprite.textureManager->getTexture();
+					graphics->drawSprite(enemySprite.spriteData);
+					graphics->spriteEnd();
+
+
+					// Check collision
+					CCollidable enemyCollider;
+					enemyCollider.angle = enemySprite.getAngle();
+					enemyCollider.center = *enemySprite.getCenter();
+					enemyCollider.scale = enemySprite.getScale();
+
+					Vec2 collisionVector = Vec2(0, 0);
+					if (collider->collideBox(enemyCollider, collisionVector) == true) {
+						motion->collidedDelta =
+							collider->bounce(enemyCollider, collisionVector);
+						motion->colliding = true;
+					}
+				}
+			}
 		}
 	}
 };
