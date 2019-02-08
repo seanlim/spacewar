@@ -14,7 +14,7 @@ class SEnemy : public System
 private:
 	Graphics * graphics;
 	int MIN_MAX_RAND(int min, int max) { return rand() % (max - min + 1) + min; }
-	int enemyMap[20][1]; // row, column
+	float timer = 0;
 
 public:
 	CSprite enemySprite;
@@ -26,16 +26,12 @@ public:
 		System::addComponentType(CEnemyInteractable::id);
 
 		this->graphics = _graphics;
-		setEnemies(1);
+		//setEnemies(1);
+		enemySprite.setPosition(MIN_MAX_RAND(0, GAME_WIDTH - 64), 0);
 	}
 
 	inline void setEnemies(int value)
 	{
-		for (int row = 0; row < 1; row++) {
-			for (int column = 0; column < 20; column++) {
-				enemyMap[row][column] = 1;
-			}
-		}
 	}
 
 	virtual void updateComponents(float delta, BaseComponent** components)
@@ -44,36 +40,23 @@ public:
 		CCollidable* collider = (CCollidable*)components[1];
 		CEnemyInteractable* enemyInteractable = (CEnemyInteractable*)components[2];
 
-		for (int column = 0; column < 20; column++) {
-			for (int row = 0; row < 1; row++) {
+		// Draw enemies
+		graphics->spriteBegin();	
+		enemySprite.spriteData.texture = enemySprite.textureManager->getTexture();
+		graphics->drawSprite(enemySprite.spriteData);
+		graphics->spriteEnd();
+					
+		// Check collision
+		CCollidable enemyCollider;
+		enemyCollider.angle = enemySprite.getAngle();
+		enemyCollider.center = *enemySprite.getCenter();
+		enemyCollider.scale = enemySprite.getScale();
 
-				enemySprite.setPosition((column * 64), (row * 64));
-
-				if (enemyMap[row][column] == 1) {
-
-					// Draw enemies
-					//enemySprite.setPosition(MIN_MAX_RAND(0, GAME_WIDTH - 64), 0);
-
-					graphics->spriteBegin();
-					enemySprite.spriteData.texture = enemySprite.textureManager->getTexture();
-					graphics->drawSprite(enemySprite.spriteData);
-					graphics->spriteEnd();
-
-
-					// Check collision
-					CCollidable enemyCollider;
-					enemyCollider.angle = enemySprite.getAngle();
-					enemyCollider.center = *enemySprite.getCenter();
-					enemyCollider.scale = enemySprite.getScale();
-
-					Vec2 collisionVector = Vec2(0, 0);
-					if (collider->collideBox(enemyCollider, collisionVector) == true) {
-						motion->collidedDelta =
-							collider->bounce(enemyCollider, collisionVector);
-						motion->colliding = true;
-					}
-				}
-			}
+		Vec2 collisionVector = Vec2(0, 0);
+		if (collider->collideBox(enemyCollider, collisionVector) == true) {
+			motion->collidedDelta =
+				collider->bounce(enemyCollider, collisionVector);
+			motion->colliding = true;
 		}
 	}
 };
