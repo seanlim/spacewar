@@ -12,7 +12,7 @@
 class Stage : public Scene
 {
 
-  TextureManager backgroundTexture, spaceShipTexture, enemyTexture;
+  TextureManager backgroundTexture, spaceShipTexture, enemyTexture, planetTexture;
 
   // Systems
   SEnemy* enemySystem;
@@ -23,7 +23,7 @@ public:
   Stage() : Scene() {}
   ~Stage();
 
-  void setupSystems() 
+  void setupSystems()
   {
 	  // Enemy system
 	  enemySystem = new SEnemy(graphics);
@@ -40,11 +40,13 @@ public:
       Logger::error("Failed to load background texture");
     if (!spaceShipTexture.initialise(graphics, SHIPS))
       Logger::error("Failed to load ships texture");
-	if (!enemyTexture.initialise(graphics, ENEMY_ONE))
-	  Logger::error("Failed to load enemy texture");
+	  if (!enemyTexture.initialise(graphics, ENEMY_ONE))
+	    Logger::error("Failed to load enemy texture");
+    if (!planetTexture.initialise(graphics, PLANET))
+      Logger::error("Failed ot load planet texture");
   }
 
-  void setupEntities() 
+  void setupComponents() 
   {
 	  // Init enemies
 	  CSprite enemySprite;

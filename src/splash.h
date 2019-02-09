@@ -25,7 +25,7 @@ public:
     if (!logoTexture.initialise(graphics, ENGINE_LOGO))
       Logger::error("Failed to load logo texture");
   }
-  void setupEntities()
+  void setupComponents()
   {
     logoSprite.currentFrame = 0;
     logoSprite.initialise(ENGINE_LOGO_WIDTH, ENGINE_LOGO_HEIGHT, 1,
