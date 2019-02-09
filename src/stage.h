@@ -13,14 +13,15 @@ class Stage : public Scene
 {
 
   TextureManager backgroundTexture, spaceShipTexture, 
-	  enemyTexture, enemy2Texture, enemy3Texture, planetTexture;
+	  enemyTexture, enemy2Texture, enemy3Texture, enemyDestroyedTexture,
+	  planetTexture;
 
   // Systems
   SEnemy* enemySystem;
   SPlayerControlled* playerControlSystem;
 
   // Components
-  CSprite enemySprite, enemy2Sprite, enemy3Sprite,
+  CSprite enemySprite, enemy2Sprite, enemy3Sprite, enemyDestroyedSprite,
 	  playerSprite;
   CMotion playerMotion;
   CPlayerControlled playerControls;
@@ -52,11 +53,13 @@ public:
     if (!spaceShipTexture.initialise(graphics, SHIPS))
       Logger::error("Failed to load ships texture");
 	if (!enemyTexture.initialise(graphics, ENEMY_ONE))
-		Logger::error("Failed to load enemy texture");
+		Logger::error("Failed to load enemy 1 texture");
 	if (!enemy2Texture.initialise(graphics, ENEMY_TWO))
-		Logger::error("Failed to load enemy texture");
+		Logger::error("Failed to load enemy 2 texture");
 	if (!enemy3Texture.initialise(graphics, ENEMY_THREE))
-		Logger::error("Failed to load enemy texture");
+		Logger::error("Failed to load enemy 3 texture");
+	if (!enemyDestroyedTexture.initialise(graphics, ENEMY_EXPLOSION))
+		Logger::error("Failed to load enemy destroyed texture");
     if (!planetTexture.initialise(graphics, PLANET))
       Logger::error("Failed ot load planet texture");
   }
@@ -81,6 +84,12 @@ public:
 	  enemy3Sprite.initialise(32, 32, 2, &enemy3Texture);
 	  enemy3Sprite.setScale(2.5);
 	  enemySprite.animates = true;
+
+	  enemyDestroyedSprite.startFrame = 0, enemyDestroyedSprite.endFrame = 5,
+		  enemyDestroyedSprite.currentFrame = 0;
+	  enemyDestroyedSprite.initialise(16, 16, 5, &enemyDestroyedTexture);
+	  enemyDestroyedSprite.setScale(2.5);
+	  enemyDestroyedSprite.animates = true;
 
 	  // Init player
 	  playerSprite.startFrame = 0, playerSprite.endFrame = 0,

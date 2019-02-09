@@ -20,7 +20,8 @@ public:
 	enum EnemyType {
 		SMALL,
 		MEDIUM,
-		LARGE
+		LARGE,
+		DESTROYED
 	};
 	
 	struct Enemy {
@@ -29,10 +30,10 @@ public:
 		EnemyType enemyType = SMALL;
 	};
 
-	CSprite *enemySprite, *enemy2Sprite, *enemy3Sprite;
+	CSprite *enemySprite, *enemy2Sprite, *enemy3Sprite, *enemyDestroyedSprite;
 	CCollidable enemyCollider;
 
-	int numEnemies = 5;
+	int numEnemies = 10;
 	Array<Enemy> enemies = {};
 
 	float timer = 0;
@@ -68,6 +69,7 @@ public:
 		enemySprite->updateCurrentFrame(delta);
 		//enemy2Sprite->updateCurrentFrame(delta);
 		//enemy3Sprite->updateCurrentFrame(delta);
+		//enemyDestroyedSprite->updateCurrentFrame(delta);
 
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies[i].enemyPosition += enemies[i].enemyVelocity * delta;
@@ -93,6 +95,12 @@ public:
 				graphics->drawSprite(enemy3Sprite->spriteData);
 				graphics->spriteEnd();
 				break;
+			case DESTROYED:
+				graphics->spriteBegin();
+				enemyDestroyedSprite->spriteData.texture = enemyDestroyedSprite->textureManager->getTexture();
+				graphics->drawSprite(enemyDestroyedSprite->spriteData);
+				graphics->spriteEnd();
+				break;
 			}
 
 			// Check collision
@@ -102,11 +110,12 @@ public:
 
 			Vec2 collisionVector = Vec2(0, 0);
 			if (collider->collideBox(enemyCollider, collisionVector) == true) {
-				motion->collidedDelta =
-					collider->bounce(enemyCollider, collisionVector);
+				//motion->collidedDelta =
+				//	collider->bounce(enemyCollider, collisionVector);
 				motion->colliding = true;
 
-				Logger::println("hel");
+				enemies[i].enemyType = DESTROYED;
+				enemies.erase(enemies.begin() + i);
 			}
 		}
 	}
