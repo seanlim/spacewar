@@ -22,6 +22,7 @@ class Stage : public Scene
 	CSprite bulletSprite, playerSprite, playerPos;
 	CBulletEmitter bulletEmit;
 	CPlayerControlled playerInput;
+	CCollidable bulletCollision;
 
 	// Entities
 	EntityHook bullet;
@@ -61,8 +62,8 @@ public:
 		bulletSprite.initialise(BULLET_WIDTH, BULLET_HEIGHT, BULLET_COLS,
 			&bulletTexture);
 		bulletSprite.setScale(1.5);
-		bulletMotion.velocity = Vec2(0.0, -50);
-		bulletMotion.friction = 0.0;
+		//bulletMotion.velocity = Vec2(0.0, -50);
+		//bulletMotion.friction = 0.0;
 		bulletShoot->bulletSprite = bulletSprite;
 		
 		playerSprite.startFrame = 0, playerSprite.endFrame = 1,
@@ -78,7 +79,6 @@ public:
 
 	void render()
 	{
-
 	}
 
 	void attach()

@@ -10,6 +10,10 @@ template <class T> class Stack
 
 public:
   Stack()
+  {
+	  topNode = nullptr;
+	  size = 0;
+  }
   { }
   ~Stack()
   {

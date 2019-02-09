@@ -20,15 +20,17 @@ class SBullet : public System
 	Graphics* graphics;
 	Game* game;
 
-	Array<Bullet> bullets;
+	Array<Bullet* > bullets;
 
 public:
+	Bullet bullet;
 	CSprite bulletSprite;
 	SBullet(Graphics* _graphics, Game* _game) : System()
 	{
 		System::addComponentType(CMotion::id);
 		System::addComponentType(CBulletEmitter::id);
 		System::addComponentType(CSprite::id);
+		System::addComponentType(CCollidable::id);
 
 		this->graphics = _graphics;
 		this->game = _game;
@@ -38,16 +40,30 @@ public:
 		CMotion* motion = (CMotion*)components[0];
 		CBulletEmitter* bulletEmit = (CBulletEmitter*)components[1];
 		CSprite* playerPos = (CSprite*)components[2];
+		CCollidable* bulletCollision = (CCollidable*)components[3];
 
-		if (bulletEmit->shooting)
+		while (bulletEmit->shooting)
 		{
-			bulletSprite.setPosition(playerPos->getX() + playerPos->getWidth(),
-				playerPos->getY() + playerPos->getHeight());
+			bulletSprite.setPosition(playerPos->getX(),
+				playerPos->getY() - playerPos->getHeight());
 			graphics->spriteBegin();
 			bulletSprite.spriteData.texture =
 				bulletSprite.textureManager->getTexture();
 			graphics->drawSprite(bulletSprite.spriteData);
 			graphics->spriteEnd();
+
+			//Store bullet
+			Bullet *newBullet = new Bullet(bullet);
+			newBullet->velocity = Vec2(0.0, -50);
+			newBullet->position = Vec2(playerPos->getX(),
+				playerPos->getY() - playerPos->getHeight());
+
+			// Fire bullet
+			bullets.push_back(newBullet);
+
+			// Collision for bullet
+			bulletCollision->collisionType = ORIENTED_BOX;
+			bulletCollision->collisionResponse = NONE;
 		}
 
 	}
