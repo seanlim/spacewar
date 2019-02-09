@@ -9,7 +9,7 @@
 
 class Stage : public Scene
 {
-  TextureManager backgroundTexture, spaceShipTexture;
+  TextureManager backgroundTexture, earthTexture;
 
 public:
   Stage() : Scene() {}
@@ -20,8 +20,8 @@ public:
   {
     if (!backgroundTexture.initialise(graphics, BACKGROUND))
       Logger::error("Failed to load background texture");
-    if (!spaceShipTexture.initialise(graphics, SHIPS))
-      Logger::error("Failed to load ships texture");
+    if (!planetTexture.initialise(graphics, PLANET))
+      Logger::error("Failed ot load planet texture");
   }
 
   void setupEntities() {}

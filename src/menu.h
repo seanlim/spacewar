@@ -105,7 +105,7 @@ public:
       Logger::error("Failed to load game title texture");
   }
 
-  void setupEntities()
+  void setupComponents()
   {
 
     backgroundImage.startFrame = 0, backgroundImage.endFrame = 0,
@@ -194,7 +194,7 @@ public:
   {
     gameSystems->addSystem(*menuShipSelect);
     background = ecs->makeEntity(backgroundImage, titleAnimation);
-    // title = ecs->makeEntity(titleSprite, titleAnimation);
+    title = ecs->makeEntity(titleSprite, titleAnimation);
     spaceship = ecs->makeEntity(shipSprite, shipAnimation, shipSelectControls);
     Scene::attach();
   }
@@ -203,7 +203,7 @@ public:
   {
 
     gameSystems->removeSystem(*menuShipSelect);
-    // ecs->removeEntity(title);
+    ecs->removeEntity(title);
     ecs->removeEntity(background);
     ecs->removeEntity(spaceship);
     Scene::detach();
