@@ -19,6 +19,7 @@
 #include "systems/physics.h"
 #include "systems/renderable.h"
 #include "systems/collision.h"
+#include "systems/animation.h"
 
 namespace gameNS
 {
@@ -63,6 +64,7 @@ protected:
   SRenderable* renderSystem;
   SPhysics* physicsSystem;
   SCollision* collisionSystem;
+  SAnimation* animationSystem;
 
   Stack<Scene*> navigationStack;
 

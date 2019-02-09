@@ -1,18 +1,18 @@
 
 #include "game.h"
-#include "menu.h"
+#include "splash.h"
 
 class Main : public Game
 {
   // Instantiate game scenes here
   // Breakout* breakout = new Breakout();
-  Menu* menu = new Menu();
+  SplashScreen* splash = new SplashScreen();
 
 public:
   void setupRootScene()
   {
     // Init and set root scene
     // this->setScene(breakout);
-    this->setScene(menu);
+    this->setScene(splash);
   }
 };

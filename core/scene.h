@@ -46,7 +46,7 @@ public:
 
     setupSystems();
     setupTextures();
-    setupEntities();
+    setupComponents();
 
     attach(); // Attach scene entities
 
@@ -54,9 +54,11 @@ public:
 
   virtual void setupSystems() = 0; // Custom system setup
   virtual void setupTextures() = 0;
-  virtual void setupEntities() = 0;
+  virtual void setupComponents() = 0;
 
   virtual void render() = 0; // In-game draw calls
+
+  virtual void update(float delta) = 0;
 
   // Attach all components and custom systems
   virtual void attach()

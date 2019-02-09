@@ -94,12 +94,18 @@ void Game::initialise(HWND _hwnd)
   renderSystem = new SRenderable(hwnd, GAME_WIDTH, GAME_HEIGHT, FULLSCREEN,
                                  this->graphics);
   graphicsSystems.addSystem(*renderSystem);
+
   Logger::println("Initialise physics system ...");
   physicsSystem = new SPhysics();
   gameSystems.addSystem(*physicsSystem);
+
   Logger::println("Initialise collision system ...");
   collisionSystem = new SCollision();
   gameSystems.addSystem(*collisionSystem);
+
+  Logger::println("Initialise animation system...");
+  animationSystem = new SAnimation();
+  gameSystems.addSystem(*animationSystem);
 
   initialised = true;
 
@@ -209,6 +215,8 @@ void Game::run(HWND hwnd)
   // TEMP
   // move this to somewhere more intentional
   ecs.updateSystems(gameSystems, frameTime);
+
+  navigationStack.top()->update(frameTime);
 
   this->renderGame();
 
