@@ -14,7 +14,6 @@ public:
 	  topNode = nullptr;
 	  size = 0;
   }
-  { }
   ~Stack()
   {
     Node* tNode;

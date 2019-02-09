@@ -52,6 +52,11 @@ public:
 			{
 				bulletEmit->shooting = true;
 			}
+			if (input->getKeyboardKeyState(VK_SPACE) == JustReleased)
+			{
+				bulletEmit->shooting = false;
+			}
+
 		}
 	}
 };

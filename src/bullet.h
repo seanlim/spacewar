@@ -8,6 +8,7 @@
 //Create bulletEmitted component
 struct CBulletEmitter : Component<CBulletEmitter> {
 	bool shooting = false;
+	float firingRate;
 };
 
 //Create bullet system
@@ -20,51 +21,46 @@ class SBullet : public System
 	Graphics* graphics;
 	Game* game;
 
-	Array<Bullet* > bullets;
+	Array<Bullet> bullets;
 
 public:
 	Bullet bullet;
 	CSprite bulletSprite;
 	SBullet(Graphics* _graphics, Game* _game) : System()
 	{
-		System::addComponentType(CMotion::id);
 		System::addComponentType(CBulletEmitter::id);
 		System::addComponentType(CSprite::id);
-		System::addComponentType(CCollidable::id);
 
 		this->graphics = _graphics;
 		this->game = _game;
 	}
 	virtual void updateComponents(float delta, BaseComponent** components)
 	{
-		CMotion* motion = (CMotion*)components[0];
-		CBulletEmitter* bulletEmit = (CBulletEmitter*)components[1];
-		CSprite* playerPos = (CSprite*)components[2];
-		CCollidable* bulletCollision = (CCollidable*)components[3];
+		CBulletEmitter* bulletEmit = (CBulletEmitter*)components[0];
+		CSprite* playerPos = (CSprite*)components[1];
 
-		while (bulletEmit->shooting)
+		if (bulletEmit->shooting == true)
 		{
-			bulletSprite.setPosition(playerPos->getX(),
+			//Store bullet
+			Bullet newBullet = Bullet();
+			newBullet.velocity = Vec2(0.0, -50);
+			newBullet.position = Vec2(playerPos->getX(),
 				playerPos->getY() - playerPos->getHeight());
+
+			// Fire bullet
+			bullets.push_back(newBullet);
+		}
+
+		for (int i = 0; i < bullets.size(); i++)
+		{
+			bullets[i].position += bullets[i].velocity*delta;
+			bulletSprite.setPosition(bullets[i].position.x, bullets[i].position.y);
+
 			graphics->spriteBegin();
 			bulletSprite.spriteData.texture =
 				bulletSprite.textureManager->getTexture();
 			graphics->drawSprite(bulletSprite.spriteData);
 			graphics->spriteEnd();
-
-			//Store bullet
-			Bullet *newBullet = new Bullet(bullet);
-			newBullet->velocity = Vec2(0.0, -50);
-			newBullet->position = Vec2(playerPos->getX(),
-				playerPos->getY() - playerPos->getHeight());
-
-			// Fire bullet
-			bullets.push_back(newBullet);
-
-			// Collision for bullet
-			bulletCollision->collisionType = ORIENTED_BOX;
-			bulletCollision->collisionResponse = NONE;
 		}
-
 	}
 };
