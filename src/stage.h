@@ -61,7 +61,7 @@ public:
 	if (!enemyDestroyedTexture.initialise(graphics, ENEMY_EXPLOSION))
 		Logger::error("Failed to load enemy destroyed texture");
     if (!planetTexture.initialise(graphics, PLANET))
-      Logger::error("Failed ot load planet texture");
+      Logger::error("Failed to load planet texture");
   }
 
   void setupComponents()

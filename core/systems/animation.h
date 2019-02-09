@@ -4,7 +4,7 @@
 #include "ecs.h"
 #include "systems/renderable.h"
 
-enum AnimationType { SCALE, ALPHA };
+enum AnimationType { SCALE, ALPHA, BLINK };
 
 struct Animation {
   AnimationType animationType;
@@ -86,6 +86,9 @@ public:
         }
 
       } break;
+	  // Blinking animation
+	  case BLINK: {
+	  }
       }
 
       animated->animations[i] = animation;
