@@ -71,7 +71,7 @@ class StageSelect : public Scene
 
   Stage* stageScene = new Stage();
   uint32 currentStageSelected = 0;
-  int stagebutton[rows][columns];
+  //int stagebutton[rows][columns];
 
 public:
   StageSelect() : Scene() {}
@@ -92,11 +92,11 @@ public:
 
     stageSelect = new SStageSelect(input, stageScene, game);
     stageSelect->currentStageSelected = &currentStageSelected;
-    for (int row = 0; row < rows; row++) {
+    /*for (int row = 0; row < rows; row++) {
       for (int column = 0; column < columns; column++) {
         stagebutton[row][column] = 1;
       }
-    }
+    }*/
 
   }
   void setupTextures()
@@ -112,7 +112,7 @@ public:
 	
   }
 
-  void setupEntities()
+  void setupComponents()
   {
     backgroundImage.startFrame = 0, backgroundImage.endFrame = 0,
     backgroundImage.currentFrame = 0;
@@ -122,7 +122,7 @@ public:
     backgroundImage.setScale(0.5);
     backgroundImage.setPosition(0, 0);
 
-    /*stagenumberSprite.startFrame = 0, stagenumberSprite.endFrame = 9,
+    stagenumberSprite.startFrame = 0, stagenumberSprite.endFrame = 9,
     stagenumberSprite.currentFrame = 0;
     stagenumberSprite.animates = false;
     stagenumberSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
@@ -133,7 +133,7 @@ public:
         (GAME_HEIGHT / 2 - stagenumberSprite.getHeight() / 2) + 70);
 
 
-	stagenumberAnimation.animationType = SCALE;
+	/*stagenumberAnimation.animationType = SCALE;
     stagenumberAnimation.startValue = 1.5, stagenumberAnimation.endValue = 1.7,
     stagenumberAnimation.reverses = true, stagenumberAnimation.rate = 0.06;*/
 
@@ -155,7 +155,7 @@ public:
     promptSprite.setPosition(GAME_WIDTH / 2 - promptSprite.getWidth() / 2,
                              GAME_HEIGHT / 2 + promptSprite.getHeight() * 3);
     
-	for (int column = 0; column < columns; column++) {
+	/*for (int column = 0; column < columns; column++) {
       for (int row = 0; row < rows; row++) {
 
         stagenumberSprite.setPosition((GAME_WIDTH/6)*column,

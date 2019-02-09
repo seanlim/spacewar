@@ -117,7 +117,7 @@ public:
       Logger::error("Failed to load stage number texture");
   }
 
-  void setupEntities()
+  void setupComponents()
   {
 
     backgroundImage.startFrame = 0, backgroundImage.endFrame = 0,
@@ -136,9 +136,9 @@ public:
     shipSprite.setScale(1.5);
     shipSprite.setPosition(GAME_WIDTH / 2 - shipSprite.getWidth() / 2,
                            (GAME_HEIGHT / 2 - shipSprite.getHeight() / 2) + 70);
-    shipAnimation.animationType = SCALE;
+    /*shipAnimation.animationType = SCALE;
     shipAnimation.startValue = 1.5, shipAnimation.endValue = 1.7,
-    shipAnimation.reverses = true, shipAnimation.rate = 0.06;
+    shipAnimation.reverses = true, shipAnimation.rate = 0.06;*/
 
     // Setup GUI, etc
     titleSprite.startFrame = 0, titleSprite.endFrame = 2;
@@ -183,6 +183,8 @@ public:
     stageOneSprite.setScale(0.5);
     stageOneSprite.setPosition(GAME_WIDTH/2,GAME_HEIGHT/2);
   }
+
+  void update(float delta) {}
 
   void render()
   {
