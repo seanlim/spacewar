@@ -24,7 +24,7 @@ public:
       Logger::error("Failed ot load planet texture");
   }
 
-  void setupEntities() {}
+  void setupComponents() {}
 
   void render() {}
   void update(float delta) {}
