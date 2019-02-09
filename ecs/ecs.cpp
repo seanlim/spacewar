@@ -98,7 +98,7 @@ void ECS::deleteComponent(uint32 componentID, uint32 index)
   for (int i = 0; i < srcComponents.size(); i++) {
     if (componentID == srcComponents[i].first &&
         srcIndex == srcComponents[i].second) {
-      srcComponents[i].second = componentID;
+      srcComponents[i].second = index;
       break;
     }
   }
