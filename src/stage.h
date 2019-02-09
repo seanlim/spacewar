@@ -9,7 +9,7 @@
 
 class Stage : public Scene
 {
-  TextureManager backgroundTexture, earthTexture;
+  TextureManager backgroundTexture, planetTexture;
 
 public:
   Stage() : Scene() {}
