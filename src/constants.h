@@ -7,6 +7,7 @@ const char BACKGROUND[] = "assets\\bg.png";
 const char HURRICANE[] = "assets\\hurricane.png";
 const char PLANET[] = "assets\\planet.png";
 const char SHIPS[] = "assets\\ships.png";
+const char BULLET[] = "assets\\bullet.png";
 const char UFO[] = "assets\\ufo.png";
 const char PROMPT[] = "assets\\prompt.png";
 const char ANGLE_ICON[] = "assets\\angle-icon.png";
@@ -27,6 +28,10 @@ const unsigned int PLANET_HEIGHT = 1000;
 const unsigned int SHIPS_COLS = 10;
 const unsigned int SHIPS_WIDTH = 66;
 const unsigned int SHIPS_HEIGHT = 64;
+
+const unsigned int BULLET_COLS = 1;
+const unsigned int BULLET_WIDTH = 64;
+const unsigned int BULLET_HEIGHT = 64;
 
 const unsigned int UFO_COLS = 4;
 const unsigned int UFO_WIDTH = 74;
