@@ -127,7 +127,8 @@ bool CreateMainWindow(HWND& hwnd, HINSTANCE hInstance, int nCmdShow)
   if (!FULLSCREEN) {
     RECT clientRect;
     GetClientRect(hwnd, &clientRect);
-    MoveWindow(hwnd, 0, 0, GAME_WIDTH + (GAME_WIDTH - clientRect.right),
+    MoveWindow(hwnd, clientRect.left + (GAME_WIDTH / 2), clientRect.top / 2,
+               GAME_WIDTH + (GAME_WIDTH - clientRect.right),
                GAME_HEIGHT + (GAME_HEIGHT - clientRect.bottom), true);
   }
 

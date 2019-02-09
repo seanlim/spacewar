@@ -58,6 +58,8 @@ public:
 
   virtual void render() = 0; // In-game draw calls
 
+  virtual void update(float delta) = 0;
+
   // Attach all components and custom systems
   virtual void attach()
   {

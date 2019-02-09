@@ -12,6 +12,7 @@ struct CSprite : public Component<CSprite> {
   int startFrame, endFrame, currentFrame;
   int cols;
   float frameDelay;
+  float alpha;
   COLOR_ARGB colorFilter;
 
   bool animates;
@@ -32,6 +33,7 @@ struct CSprite : public Component<CSprite> {
     spriteData.flipHorizontal = false, this->spriteData.flipVertical = false;
 
     // startFrame = 0, endFrame = 0, currentFrame = 0;
+    alpha = 1.0;
     cols = ncols;
     animTimer = 0.0;
     frameDelay = 0.05;
@@ -57,6 +59,8 @@ struct CSprite : public Component<CSprite> {
 
   float getX() { return spriteData.x; }
   float getY() { return spriteData.y; }
+  float getCenterX() { return getX() + (getWidth() / 2); }
+  float getCenterY() { return getY() + (getHeight() / 2); }
   float getAngle() { return spriteData.angle; }
   float getScale() { return spriteData.scale; }
   const Vec2* getCenter() { return &Vec2(getCenterX(), getCenterY()); }
@@ -97,14 +101,6 @@ struct CSprite : public Component<CSprite> {
 
 private:
   float animTimer;
-  inline float getCenterX()
-  {
-    return spriteData.x + (spriteData.width / 2) * getScale();
-  }
-  inline float getCenterY()
-  {
-    return spriteData.y + (spriteData.height / 2) * getScale();
-  }
 };
 
 class SRenderable : public System
@@ -125,10 +121,12 @@ public:
   {
     CSprite* sprite = (CSprite*)components[0];
 
+    uint32 alpha = 255 * sprite->alpha;
+    COLOR_ARGB color = D3DCOLOR_ARGB(alpha, 255, 255, 255);
     if (sprite->visible) {
       graphics->spriteBegin();
       sprite->spriteData.texture = sprite->textureManager->getTexture();
-      graphics->drawSprite(sprite->spriteData);
+      graphics->drawSprite(sprite->spriteData, color);
       graphics->spriteEnd();
     }
 

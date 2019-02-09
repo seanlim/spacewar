@@ -37,6 +37,7 @@
     <ClInclude Include="src\enemy.h" />
     <ClInclude Include="src\menu.h" />
     <ClInclude Include="src\playerControls.h" />
+    <ClInclude Include="src\splash.h" />
     <ClInclude Include="src\stage.h" />
   </ItemGroup>
   <ItemGroup>

@@ -4,14 +4,20 @@
 #include "ecs.h"
 #include "systems/renderable.h"
 
-enum AnimationType { SCALE };
-struct CAnimated : public Component<CAnimated> {
+enum AnimationType { SCALE, ALPHA };
+
+struct Animation {
   AnimationType animationType;
   float startValue;
   float endValue;
   float rate = 0.01;
   bool reverses;
+  bool reversed = false;
   bool repeats;
+};
+
+struct CAnimated : public Component<CAnimated> {
+  Array<Animation> animations;
 };
 
 // TODO: Animation curve, this animation system is currently restricted to
@@ -27,32 +33,62 @@ public:
 
   virtual void updateComponents(float delta, BaseComponent** components)
   {
-    CAnimated* animation = (CAnimated*)components[0];
+    CAnimated* animated = (CAnimated*)components[0];
     CSprite* sprite = (CSprite*)components[1];
 
-    switch (animation->animationType) {
-    case SCALE:
-      const float start = animation->startValue;
-      const float newScale =
-          lerp(sprite->getScale(), animation->endValue, animation->rate);
-      const float scaleDiff = newScale - sprite->getScale();
-      const float width = sprite->getWidth(), height = sprite->getHeight();
-      sprite->setScale(newScale);
+    for (int i = 0; i < animated->animations.size(); i++) {
+      Animation animation = animated->animations[i];
+      switch (animation.animationType) {
+        // Scale animation
+      case SCALE: {
+        const float start = animation.startValue;
+        float centerX = sprite->getCenterX(), centerY = sprite->getCenterY();
+        const float newScale =
+            lerp(sprite->getScale(), animation.endValue, animation.rate);
 
-      float diffX = (width / 2) * scaleDiff, diffY = (height / 2) * scaleDiff;
+        sprite->setScale(newScale);
 
-      sprite->setPosition(sprite->getX() - diffX / 2,
-                          sprite->getY() - diffY / 2);
+        sprite->setPosition(centerX - (sprite->getWidth() / 2),
+                            centerY - (sprite->getHeight() / 2));
 
-      if (abs(sprite->getScale() - animation->endValue) < 0.01) {
-        // Animation has ended
-        if (animation->reverses) {
-          animation->startValue = animation->endValue;
-          animation->endValue = start;
-        } else if (animation->repeats)
-          sprite->setScale(animation->startValue);
+        if (abs(sprite->getScale() - animation.endValue) < 0.01) {
+          if (animation.reverses == true && animation.reversed == false) {
+            animation.reversed = true;
+            animation.startValue = animation.endValue;
+            animation.endValue = start;
+          } else if (animation.repeats) {
+            if (animation.reversed) {
+              sprite->setScale(animation.endValue);
+              animation.reversed = false;
+            } else {
+              float cX = sprite->getCenterX(), cY = sprite->getCenterY();
+              sprite->setScale(animation.startValue);
+              sprite->setPosition(cX - (sprite->getWidth() / 2),
+                                  cY - (sprite->getHeight() / 2));
+            }
+          }
+        }
+      } break;
+      // Alpha animation
+      case ALPHA: {
+        const float newAlpha =
+            lerp(sprite->alpha, animation.endValue, animation.rate);
+        sprite->alpha = newAlpha;
+        if (abs(sprite->alpha - animation.endValue) < 0.01) {
+          if (animation.reverses == true && animation.reversed == false) {
+            animation.reversed = true;
+            float start = animation.startValue;
+            animation.startValue = animation.endValue;
+            animation.endValue = start;
+          } else if (animation.repeats) {
+            sprite->alpha = animation.startValue;
+          }
+        }
+
+      } break;
       }
-      break;
+
+      animated->animations[i] = animation;
     }
   }
 };
