@@ -12,6 +12,10 @@ const char PROMPT[] = "assets\\prompt.png";
 const char ANGLE_ICON[] = "assets\\angle-icon.png";
 const char GAME_LOGO[] = "assets\\title.png";
 
+const char ENGINE_LOGO[] = "assets\\ponyo.png";
+const float ENGINE_LOGO_WIDTH = 150;
+const float ENGINE_LOGO_HEIGHT = 150;
+
 const unsigned int BACKGROUND_COLS = 1;
 const unsigned int BACKGROUND_WIDTH = 2048;
 const unsigned int BACKGROUND_HEIGHT = 1536;

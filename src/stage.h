@@ -27,6 +27,7 @@ public:
   void setupEntities() {}
 
   void render() {}
+  void update(float delta) {}
   void attach() { Scene::attach(); }
   void detach() { Scene::detach(); }
 };
