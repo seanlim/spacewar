@@ -36,6 +36,8 @@
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\menu.h" />
     <ClInclude Include="src\stage.h" />
+    <ClInclude Include="src\stageselect.h" />
+    <ClInclude Include="stageselect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\game.cpp" />

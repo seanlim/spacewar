@@ -7,6 +7,7 @@
 #include "scene.h"
 #include "stage.h"
 #include "systems/animation.h"
+#include "stageselect.h"
 
 struct CMenuShipSelectControlled : Component<CMenuShipSelectControlled> {
 };
@@ -15,16 +16,17 @@ class SMenuShipSelect : public System
 {
   Input* input;
   Stage* stageScene;
+  StageSelect* stageSelectScene;
   Game* game;
 
 public:
-  SMenuShipSelect(Input* _input, Stage* _stageScene, Game* _game) : System()
+  SMenuShipSelect(Input* _input, StageSelect* _stageSelectScene, Game* _game) : System()
   {
     System::addComponentType(CMenuShipSelectControlled::id);
     System::addComponentType(CSprite::id);
 
     this->input = _input;
-    this->stageScene = _stageScene;
+    this->stageSelectScene = _stageSelectScene;
     this->game = _game;
   }
   virtual void updateComponents(float delta, BaseComponent** components)
@@ -44,7 +46,7 @@ public:
     }
 
     if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
-      game->setScene(stageScene);
+      game->setScene(stageSelectScene);
     }
   }
 };
@@ -53,7 +55,7 @@ class Menu : public Scene
 {
 
   TextureManager backgroundTexture, spaceShipTexture, angleIconTexture,
-      promptTexture, gameTitleTexture;
+      promptTexture, gameTitleTexture, stagenumberTexture;
 
   // Systems
   SAnimation* menuAnimation;
@@ -61,7 +63,7 @@ class Menu : public Scene
 
   // Components
   CSprite backgroundImage, shipSprite, rightKeySprite, leftKeySprite,
-      promptSprite, titleSprite;
+      promptSprite, titleSprite, stageOneSprite;
   CAnimated shipAnimation;
   CMenuShipSelectControlled shipSelectControls;
 
@@ -71,6 +73,7 @@ class Menu : public Scene
   EntityHook title;
 
   Stage* stageScene = new Stage();
+  StageSelect* stageSelectScene = new StageSelect();
 
 public:
   Menu() : Scene() {}
@@ -86,12 +89,15 @@ public:
     promptTexture.onResetDevice();
     gameTitleTexture.onLostDevice();
     gameTitleTexture.onResetDevice();
+
+    stagenumberTexture.onLostDevice();
+    stagenumberTexture.onResetDevice();
   }
 
   void setupSystems()
   {
     menuAnimation = new SAnimation();
-    menuShipSelect = new SMenuShipSelect(input, stageScene, game);
+    menuShipSelect = new SMenuShipSelect(input, stageSelectScene, game);
   }
 
   void setupTextures()
@@ -106,6 +112,9 @@ public:
       Logger::error("Failed to load spacebar texture");
     if (!gameTitleTexture.initialise(graphics, GAME_LOGO))
       Logger::error("Failed to load game title texture");
+
+    if (!stagenumberTexture.initialise(graphics, STAGE_NUMBER))
+      Logger::error("Failed to load stage number texture");
   }
 
   void setupEntities()
@@ -166,6 +175,13 @@ public:
     promptSprite.setScale(0.7);
     promptSprite.setPosition(GAME_WIDTH / 2 - promptSprite.getWidth() / 2,
                              GAME_HEIGHT / 2 + promptSprite.getHeight() * 3);
+
+	stageOneSprite.currentFrame = 0;
+    stageOneSprite.animates = false;
+    stageOneSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
+                             STAGE_NUMBER_COLS, &stagenumberTexture);
+    stageOneSprite.setScale(0.5);
+    stageOneSprite.setPosition(GAME_WIDTH/2,GAME_HEIGHT/2);
   }
 
   void render()
@@ -178,11 +194,15 @@ public:
 
     promptSprite.spriteData.texture = promptSprite.textureManager->getTexture();
 
+	stageOneSprite.spriteData.texture =
+        stageOneSprite.textureManager->getTexture();
+
     graphics->spriteBegin();
 
     graphics->drawSprite(leftKeySprite.spriteData);
     graphics->drawSprite(rightKeySprite.spriteData);
     graphics->drawSprite(promptSprite.spriteData);
+    graphics->drawSprite(stageOneSprite.spriteData);
 
     graphics->spriteEnd();
   }
