@@ -83,14 +83,13 @@ public:
     planetSprite.alpha = 0.9;
     planetSprite.alpha = 0;
 
-	/*
     planetAnimation.animations.push_back(
         {ROTATE, 0.0, 2 * PI, 0.00001, false, false, true});
     planetAnimation.animations.push_back(
         {ALPHA, 0.0, 0.8, 0.02, false, false, false});
     planetAnimation.animations.push_back(
         {SCALE, 0.0, 2, 0.02, false, false, false});
-	*/
+	
     // Ship
     shipSprite.startFrame = 0, shipSprite.endFrame = 9,
     shipSprite.currentFrame = *selectedShip;
@@ -103,8 +102,8 @@ public:
     shipBulletEmitter.firingRate = 1.0;
     playerControlled.speed = 80;
     playerControlled.sensitivity = 25;
-//    shipAnimation.animations.push_back(
-  //      {SCALE, 1.5, 3.0, 0.05, true, false, false});
+    shipAnimation.animations.push_back(
+        {SCALE, 1.5, 3.0, 0.05, true, false, false});
     shipCollider.collisionType = BOX;
     shipCollider.collisionResponse = NONE;
     shipBulletEmitter.acceleration = Vec2(0.0, -50);
