@@ -54,6 +54,7 @@ public:
     }
 
     if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
+
       game->setScene(stageScene);
     }
   }
@@ -127,8 +128,15 @@ public:
     stagenumberSprite.startFrame = 0, stagenumberSprite.endFrame = 9,
     stagenumberSprite.currentFrame = 0;
     stagenumberSprite.animates = false;
+    stagenumberSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
+                                 STAGE_NUMBER_COLS, &stagenumberTexture);
+    stagenumberSprite.setScale(1.5);
+    stagenumberSprite.setPosition(GAME_WIDTH / 2 - stagenumberSprite.getWidth() / 2,
+                           (GAME_HEIGHT / 2 - stagenumberSprite.getHeight() / 2) + 70);
+    stagenumberAnimation.animations.push_back(
+        {SCALE, 1.5, 1.7, 0.06, true, false, true});
 
-    for (int i = 0; i < (stagenumberSprite.endFrame + 1); i++)
+    /*for (int i = 0; i < (stagenumberSprite.endFrame + 1); i++)
     {
       stagenumberSprite.currentFrame = i;
       stagenumberSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
@@ -138,7 +146,7 @@ public:
                                     GAME_HEIGHT / 2);
       stagenumberAnimation.animations.push_back(
           {SCALE, 1.5, 1.7, 0.06, true, false, true});
-    }
+    }*/
     
 	/*stagenumberSprite.currentFrame = 0;
     stagenumberSprite.animates = false;
