@@ -219,8 +219,8 @@ class SCollision : public System
   Array<CCollidable> collisionComponents; // Keep local cache of collision
                                           // components for random access in
                                           // collision detection
-  Rect collisionBounds{0, 0, GAME_WIDTH,
-                       GAME_HEIGHT}; // Bounds that desribe the simulation area
+  Rect collisionBounds = {
+      0, 0, GAME_WIDTH, GAME_HEIGHT}; // Bounds that desribe the simulation area
 
 public:
   SCollision() : System()
@@ -271,7 +271,7 @@ public:
       // Collision Detection//
       ////////////////////////
       for (int i = 0; i < collisionComponents.size(); i++) {
-        if (i == componentIndex) continue;
+        if (i == componentIndex && collisionComponents.size() > 1) continue;
 
         bool didCollide;
         Vec2 collisionVector = Vec2(0.0, 0.0);

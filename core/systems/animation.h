@@ -4,7 +4,7 @@
 #include "ecs.h"
 #include "systems/renderable.h"
 
-enum AnimationType { SCALE, ALPHA, BLINK };
+enum AnimationType { SCALE, ALPHA, ROTATE };
 
 struct Animation {
   AnimationType animationType;
@@ -80,15 +80,27 @@ public:
             float start = animation.startValue;
             animation.startValue = animation.endValue;
             animation.endValue = start;
-          } else if (animation.repeats) {
+          } else if (animation.repeats)
             sprite->alpha = animation.startValue;
-          }
         }
 
       } break;
-	  // Blinking animation
-	  case BLINK: {
-	  }
+      case ROTATE: {
+        const float newAngle =
+            lerp(sprite->spriteData.angle, animation.endValue, animation.rate);
+        sprite->spriteData.angle = newAngle;
+
+        if (abs(sprite->spriteData.angle - animation.endValue) < 0.01) {
+          if (animation.reverses == true && animation.reversed == false) {
+            animation.reversed = true;
+            float start = animation.startValue;
+            animation.startValue = animation.endValue;
+            animation.endValue = start;
+          } else if (animation.repeats)
+            sprite->spriteData.angle = animation.startValue;
+        }
+
+      } break;
       }
 
       animated->animations[i] = animation;
