@@ -46,43 +46,16 @@ public:
     if (*selectedStage <= 4 ) {
       stagenumberSprite->setPosition(
           ((GAME_WIDTH / 11) * (2 * ((*selectedStage) + 1))) -
-              stagenumberSprite->getWidth() + 5,
+              stagenumberSprite->getWidth() ,
           ((GAME_HEIGHT / 7) * 4) - stagenumberSprite->getHeight() / 2 );
     } else if (*selectedStage >= 5)
 		{
 
 		stagenumberSprite->setPosition(
           ((GAME_WIDTH / 11) * (2 * (((*selectedStage)-5) + 1))) -
-              stagenumberSprite->getWidth() + 5,
+              stagenumberSprite->getWidth(),
           ((GAME_HEIGHT / 7) * 5) - stagenumberSprite->getHeight() / 2);
 	  }
-
-
-        /*int j = 4;
-          int k = 1;
-          for (int i = 0; i < (stagenumberSprite.endFrame + 1); i++) {
-                      stagenumberSprite.currentFrame = i;
-                      stagenumberSprite.initialise(STAGE_NUMBER_WIDTH,
-          STAGE_NUMBER_HEIGHT, STAGE_NUMBER_COLS, &stagenumberTexture);
-                      stagenumberSprite.setScale(1.5);
-                        stagenumberSprite.setPosition(
-                                ((GAME_WIDTH / 11) * (k * 2)) -
-          stagenumberSprite.getWidth(),
-                                ((GAME_HEIGHT / 7) * j) -
-          stagenumberSprite.getHeight() / 2); k = k + 1; if (((i + 1) % 5) == 0)
-          { j = j + 1; k = 1;
-              }
-              }*/
-
-        /*if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
-      if (stagenumberSprite->currentFrame > stagenumberSprite->startFrame)
-        stagenumberSprite->currentFrame -= 1;
-      stagenumberSprite->setRect();
-    } else if (input->getKeyboardKeyState(VK_RIGHT) == JustPressed) {
-      if (stagenumberSprite->currentFrame < stagenumberSprite->endFrame)
-        stagenumberSprite->currentFrame += 1;
-      stagenumberSprite->setRect();
-    }*/
 
         if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
       if (*selectedStage > 0) *selectedStage -= 1;
@@ -109,14 +82,14 @@ public:
 class StageSelect : public Scene
 {
   TextureManager backgroundTexture, promptTexture, stagenumberTexture,
-      gameTitleTexture;
+      gameTitleTexture, yellowboxTexture;
 
   // Systems
   // SAnimation* menuAnimation;
   SStageSelect* stageSelect;
 
   // Components
-  CSprite backgroundImage, promptSprite, titleSprite, stagenumberSprite;
+  CSprite backgroundImage, promptSprite, titleSprite, stagenumberSprite, yellowboxSprite;
   CAnimated stagenumberAnimation, titleAnimation;
   CStageSelectControlled stageSelectControls;
 
@@ -142,6 +115,8 @@ public:
     stagenumberTexture.onResetDevice();
     gameTitleTexture.onLostDevice();
     gameTitleTexture.onResetDevice();
+    yellowboxTexture.onLostDevice();
+    yellowboxTexture.onResetDevice();
   }
 
   void setupSystems()
@@ -160,6 +135,8 @@ public:
       Logger::error("Fail to load prompt texture");
     if (!gameTitleTexture.initialise(graphics, GAME_LOGO))
       Logger::error("Fail to load game title texture");
+    if (!yellowboxTexture.initialise(graphics, YELLOW_BOX))
+      Logger::error("Fail to load yellow box texture");
   }
 
   void setupComponents()
@@ -180,19 +157,17 @@ public:
     stagenumberSprite.setScale(1.5);
     stagenumberSprite.setPosition(
         GAME_WIDTH / 2 - stagenumberSprite.getWidth() / 2,
-        (GAME_HEIGHT / 2 - stagenumberSprite.getHeight() / 2) + 70);
-    stagenumberAnimation.animations.push_back(
-        {SCALE, 1.5, 1.7, 0.06, true, false, true});*/
+        (GAME_HEIGHT / 2 - stagenumberSprite.getHeight() / 2) + 70);*/
 
     stagenumberSprite.currentFrame = 0;
     stagenumberSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
                                  STAGE_NUMBER_COLS, &stagenumberTexture);
     stagenumberSprite.setScale(1.5);
-    stagenumberSprite.setPosition(
+   /* stagenumberSprite.setPosition(
         (GAME_WIDTH / 11) * 2 - stagenumberSprite.getWidth(),
         ((GAME_HEIGHT / 7) * 4) - stagenumberSprite.getHeight() / 2);
     stagenumberAnimation.animations.push_back(
-        {SCALE, 1.6, 1.8, 0.06, true, false, true});
+        {SCALE, 1.6, 1.8, 0.06, true, false, true});*/
 
     /*int j = 4;
     int k = 1;
@@ -231,24 +206,15 @@ public:
     promptSprite.setPosition(GAME_WIDTH / 2 - promptSprite.getWidth() / 2,
                              GAME_HEIGHT / 2 + promptSprite.getHeight() * 3);
 
-    /*for (int column = 0; column < columns; column++) {
-  for (int row = 0; row < rows; row++) {
+	yellowboxSprite.startFrame = 0, yellowboxSprite.endFrame = 0,
+    yellowboxSprite.currentFrame = 0;
+    yellowboxSprite.animates = false;
+        yellowboxSprite.initialise(YELLOWBOX_WIDTH, YELLOWBOX_HEIGHT,
+                                   YELLOWBOX_COL, &yellowboxTexture);
+    yellowboxSprite.setScale(0.25);
+        stagenumberAnimation.animations.push_back(
+            {SCALE, 0.25, 0.45, 0.06, true, false, true});
 
-            stagenumberSprite.currentFrame = currentStageSelected;
-    stagenumberSprite.setPosition((GAME_WIDTH/6)*column,
-                           (GAME_LOGO_HEIGHT/2)*row);
-    currentStageSelected = currentStageSelected + 1;
-
-    if (stagebutton[row][column] == 1) {
-      graphics->spriteBegin();
-      stagenumberSprite.currentFrame = currentStageSelected;
-      stagenumberSprite.spriteData.texture =
-          stagenumberSprite.textureManager->getTexture();
-      graphics->drawSprite(stagenumberSprite.spriteData);
-      graphics->spriteEnd();
-              }
-            }
-      }*/
   }
 
   void update(float delta) {}
@@ -291,9 +257,9 @@ public:
     gameSystems->addSystem(*stageSelect);
     background = ecs->makeEntity(backgroundImage);
     title = ecs->makeEntity(titleSprite);
-    stagenumber = ecs->makeEntity(stagenumberSprite, stagenumberAnimation,
-                                  stageSelectControls);
-    Scene::attach();
+    stagenumber = ecs->makeEntity(yellowboxSprite, stagenumberAnimation,
+                                  stageSelectControls);  
+	Scene::attach();
   }
   void detach()
   {

@@ -15,6 +15,7 @@ const char ANGLE_ICON[] = "assets\\angle-icon.png";
 const char GAME_LOGO[] = "assets\\title.png";
 const char STAGE_NUMBER[] = "assets\\stagenumber.png";
 const char BULLET[] = "assets\\bullet.png";
+const char YELLOW_BOX[] = "assets\\yellowsquare.png";
 
 const char ENGINE_LOGO[] = "assets\\ponyo.png";
 const float ENGINE_LOGO_WIDTH = 150;
@@ -59,3 +60,8 @@ const unsigned int STAGE_NUMBER_HEIGHT = 64;
 const unsigned int BULLET_COLS = 1;
 const unsigned int BULLET_WIDTH = 64;
 const unsigned int BULLET_HEIGHT = 64;
+
+const unsigned int YELLOWBOX_COL = 1;
+const unsigned int YELLOWBOX_WIDTH = 256;
+const unsigned int YELLOWBOX_HEIGHT = 256;
+
