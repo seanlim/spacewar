@@ -30,15 +30,17 @@ class Stage : public Scene
 
   EntityHook backgroundEntity, planetEntity, shipEntity, healthEntity;
 
-  const int numberOfEnemies = 1;
+  const int numberOfEnemies = 30;
   Array<EntityHook> enemyHooks = {};
 
   int* selectedShip;
-  int healthBar = 0;
+  int healthBar;
+  float timer = 0;
+  int enemyCount = 0;
 
 public:
-  Stage(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip; }
-  ~Stage();
+	Stage(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip;}
+	~Stage();
 
   void setupSystems()
   {
@@ -63,7 +65,7 @@ public:
     if (!enemy3Texture.initialise(graphics, ENEMY_THREE))
       Logger::error("Failed to load enemy3 texture");
     if (!healthTexture.initialise(graphics, HEALTH))
-      Logger::error("Failed to load health texture");
+	  Logger::error("Failed to load health texture");
   }
 
   void setupComponents()
@@ -152,7 +154,6 @@ public:
     // Hardcoding position
     enemy2Sprite.setPosition(GAME_WIDTH / 2 - enemySprite.getWidth() / 2,
                              -enemySprite.getHeight());
-
     enemy2Sprite.animates = true;
 
     enemy3Sprite.startFrame = 0, enemy3Sprite.endFrame = 1,
@@ -166,6 +167,33 @@ public:
     enemy3Sprite.animates = true;
 
     enemy.enabled = true;
+
+	// Adding nodes for paths
+	Vec2 node1 = Vec2(100, 500);
+	Vec2 node2 = Vec2(300, 300);
+	Vec2 node3 = Vec2(700, 400);
+	Vec2 node4 = Vec2(800, 600);
+	Vec2 node5 = Vec2(900, 500);
+	Vec2 node6 = Vec2(500, 650);
+	Vec2 node7 = Vec2(300, 400);
+	Vec2 node8 = Vec2(200, 200);
+	Vec2 node9 = Vec2(0, 300);
+	Vec2 node10 = Vec2(250, 800);
+	Vec2 node11 = Vec2(400, 200);
+	Vec2 node12 = Vec2(700, 250);
+	enemy.addNode(node1);
+	enemy.addNode(node2);
+	enemy.addNode(node3);
+	enemy.addNode(node4);
+	enemy.addNode(node5);
+	enemy.addNode(node6);
+	enemy.addNode(node7);
+	enemy.addNode(node8);
+	enemy.addNode(node9);
+	enemy.addNode(node10);
+	enemy.addNode(node11);
+	enemy.addNode(node12);
+
     enemyCollider.collisionType = BOX;
     enemyCollider.collisionResponse = NONE;
     enemyBulletEmitter.emitterID = "enemy";
@@ -183,8 +211,19 @@ public:
 
   void update(float delta)
   {
-    healthSprite.currentFrame = healthBar;
-    healthSprite.setRect();
+	  healthSprite.currentFrame = healthBar;
+	  healthSprite.setRect();
+
+	  for (int i = 0; i < numberOfEnemies; i++) {
+		  timer += 0.01f / delta;
+
+		  if (timer >= 2500 && enemyCount <= numberOfEnemies) {
+			  enemyHooks.push_back(ecs->makeEntity(enemy, enemySprite, enemyMotion,
+				  enemyCollider, enemyBulletEmitter));
+			  timer = 0;
+			  enemyCount += 1;
+		  }
+	  }
   }
 
   void attach()
@@ -195,10 +234,6 @@ public:
     planetEntity = ecs->makeEntity(planetSprite, planetAnimation);
     shipEntity = ecs->makeEntity(shipSprite, shipBulletEmitter, shipAnimation,
                                  shipMotion, shipCollider, playerControlled);
-    for (int i = 0; i < numberOfEnemies; i++) {
-      enemyHooks.push_back(ecs->makeEntity(enemy, enemySprite, enemyMotion,
-                                           enemyCollider, enemyBulletEmitter));
-    }
     graphicsSystems->addSystem(*bulletSystem);
     Scene::attach();
   }
