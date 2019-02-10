@@ -25,10 +25,10 @@ class Stage : public Scene
   EntityHook backgroundEntity, planetEntity, shipEntity, healthEntity;
 
   int* selectedShip;
-  int* healthBar;
+  int healthBar;
 
 public:
-	Stage(int* _selectedShip, int* _healthbar) : Scene() { this->selectedShip = _selectedShip; this->healthBar = _healthbar; }
+	Stage(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip;}
   ~Stage();
 
   void setupSystems()
@@ -64,12 +64,12 @@ public:
 
 	// Health
 	healthSprite.startFrame = 0, healthSprite.endFrame = 6,
-		healthSprite.currentFrame = 0; // *healthBar
+		healthSprite.currentFrame = 0; 
 	healthSprite.animates = false;
 	healthSprite.initialise(HEALTH_WIDTH, HEALTH_HEIGHT,
 		HEALTH_COLS, &healthTexture);
 	healthSprite.setScale(0.7);
-	healthSprite.setPosition(0, 0);
+	healthSprite.setPosition(0, GAME_HEIGHT - healthSprite.getHeight());
 
     // Planet
     planetSprite.startFrame = 0, planetSprite.endFrame = 5,
@@ -119,14 +119,23 @@ public:
     bulletSystem->bulletSprite = bulletSprite;
   }
 
-  void render() {}
-  void update(float delta) {}
+  void render() 
+  {
+	  graphics->spriteBegin();
+	  healthSprite.spriteData.texture = healthSprite.textureManager->getTexture();
+	  graphics->drawSprite(healthSprite.spriteData);
+	  graphics->spriteEnd();
+  }
+  void update(float delta) 
+  {
+	  healthSprite.currentFrame = healthBar;
+	  healthSprite.setRect();
+  }
 
   void attach()
   {
     gameSystems->addSystem(*playerControlSystem);
     backgroundEntity = ecs->makeEntity(backgroundSprite);
-    healthEntity = ecs->makeEntity(healthSprite);
     planetEntity = ecs->makeEntity(planetSprite, planetAnimation);
     shipEntity = ecs->makeEntity(shipSprite, shipBulletEmitter, shipAnimation,
                                  shipMotion, shipCollider, playerControlled);
@@ -138,7 +147,6 @@ public:
     graphicsSystems->removeSystem(*bulletSystem);
     gameSystems->removeSystem(*playerControlSystem);
     ecs->removeEntity(backgroundEntity);
-    ecs->removeEntity(healthEntity);
     ecs->removeEntity(planetEntity);
     ecs->removeEntity(shipEntity);
     delete playerControlSystem;
