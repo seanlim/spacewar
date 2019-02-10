@@ -39,11 +39,13 @@ public:
 		CBulletEmitter* bulletEmit = (CBulletEmitter*)components[0];
 		CSprite* playerPos = (CSprite*)components[1];
 
-		if (bulletEmit->shooting == true)
+		Logger::println("FPS " + std::to_string(0.01f / delta));
+
+		if (bulletEmit->shooting == true && bulletEmit->firingRate > 1.7)
 		{
 			//Store bullet
 			Bullet newBullet = Bullet();
-			newBullet.velocity = Vec2(0.0, -50);
+			newBullet.velocity = Vec2(0.0, -120);
 			newBullet.position = Vec2(playerPos->getX(),
 				playerPos->getY() - playerPos->getHeight());
 
@@ -55,12 +57,12 @@ public:
 		{
 			bullets[i].position += bullets[i].velocity*delta;
 			bulletSprite.setPosition(bullets[i].position.x, bullets[i].position.y);
-
+			
 			graphics->spriteBegin();
 			bulletSprite.spriteData.texture =
 				bulletSprite.textureManager->getTexture();
 			graphics->drawSprite(bulletSprite.spriteData);
 			graphics->spriteEnd();
-		}
+		} 
 	}
 };

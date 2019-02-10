@@ -16,13 +16,14 @@ class Stage : public Scene
 	// Systems
 	SBullet* bulletShoot;
 	SPlayerShoot* playerShoot;
+	SAnimation* playerAnimation;
 
 	// Components
 	CMotion bulletMotion, playerMotion;
 	CSprite bulletSprite, playerSprite, playerPos;
 	CBulletEmitter bulletEmit;
 	CPlayerControlled playerInput;
-	CCollidable bulletCollision;
+	CAnimated playerShipAnimation;
 
 	// Entities
 	EntityHook bullet;
@@ -42,6 +43,7 @@ public:
 	{
 		bulletShoot = new SBullet(graphics, game);
 		playerShoot = new SPlayerShoot(input, game);
+		playerAnimation = new SAnimation();
 	}
 
 	void setupTextures()
@@ -56,6 +58,7 @@ public:
 
 	void setupEntities()
 	{
+		//Setup bullet
 		bulletSprite.startFrame = 0, bulletSprite.endFrame = 1,
 			bulletSprite.currentFrame = 0;
 		bulletSprite.animates = false;
@@ -64,6 +67,7 @@ public:
 		bulletSprite.setScale(1.5);
 		bulletShoot->bulletSprite = bulletSprite;
 		
+		//Setup player
 		playerSprite.startFrame = 0, playerSprite.endFrame = 1,
 			playerSprite.currentFrame = 0;
 		playerSprite.animates = false;
@@ -72,6 +76,9 @@ public:
 		playerSprite.setScale(1.5);
 		playerSprite.setPosition(GAME_WIDTH / 2 - playerSprite.getWidth() / 2,
 			(GAME_HEIGHT / 2 - playerSprite.getHeight() / 2) + 70);
+		playerShipAnimation.animationType = SCALE;
+		playerShipAnimation.startValue = 1.5, playerShipAnimation.endValue = 1.7,
+			playerShipAnimation.reverses = true, playerShipAnimation.rate = 0.06;
 		playerPos = playerSprite;
 	}
 
