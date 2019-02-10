@@ -4,10 +4,6 @@
 const char BACKGROUND[] = "assets\\bg.png";
 const char PLANET[] = "assets\\planet.png";
 const char SHIPS[] = "assets\\ships.png";
-const char ENEMY_ONE[] = "assets\\enemy_small.png";
-const char ENEMY_TWO[] = "assets\\enemy_medium.png";
-const char ENEMY_THREE[] = "assets\\enemy_big.png";
-const char ENEMY_EXPLOSION[] = "assets\\explosion.png";
 const char UFO[] = "assets\\ufo.png";
 const char ENEMY_ONE[] = "assets\\enemy_small.png";
 const char ENEMY_TWO[] = "assets\\enemy_medium.png";
