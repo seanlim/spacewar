@@ -33,8 +33,11 @@
     <ClInclude Include="ecs\component.h" />
     <ClInclude Include="ecs\ecs.h" />
     <ClInclude Include="ecs\system.h" />
+    <ClInclude Include="src\bullet.h" />
     <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\enemy.h" />
     <ClInclude Include="src\menu.h" />
+    <ClInclude Include="src\playerControlled.h" />
     <ClInclude Include="src\splash.h" />
     <ClInclude Include="src\stage.h" />
     <ClInclude Include="src\stageselect.h" />

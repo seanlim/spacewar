@@ -14,6 +14,7 @@ const char PROMPT[] = "assets\\prompt.png";
 const char ANGLE_ICON[] = "assets\\angle-icon.png";
 const char GAME_LOGO[] = "assets\\title.png";
 const char STAGE_NUMBER[] = "assets\\stagenumber.png";
+const char BULLET[] = "assets\\bullet.png";
 
 const char ENGINE_LOGO[] = "assets\\ponyo.png";
 const float ENGINE_LOGO_WIDTH = 150;
@@ -27,9 +28,9 @@ const unsigned int HURRICANE_COLS = 1;
 const unsigned int HURRICANE_WIDTH = 200;
 const unsigned int HURRICANE_HEIGHT = 200;
 
-const unsigned int PLANET_COLS = 1;
-const unsigned int PLANET_WIDTH = 1000;
-const unsigned int PLANET_HEIGHT = 1000;
+const unsigned int PLANET_COLS = 3;
+const unsigned int PLANET_WIDTH = 330;
+const unsigned int PLANET_HEIGHT = 330;
 
 const unsigned int SHIPS_COLS = 10;
 const unsigned int SHIPS_WIDTH = 66;
@@ -55,3 +56,8 @@ const unsigned int STAGE_NUMBER_COLS = 10;
 const unsigned int STAGE_NUMBER_WIDTH = 66;
 const unsigned int STAGE_NUMBER_HEIGHT = 64;
 
+const unsigned int GAME_LOGO_HEIGHT = 396;
+
+const unsigned int BULLET_COLS = 1;
+const unsigned int BULLET_WIDTH = 64;
+const unsigned int BULLET_HEIGHT = 64;

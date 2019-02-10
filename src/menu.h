@@ -6,27 +6,28 @@
 #include "math/lerp.h"
 #include "scene.h"
 #include "stage.h"
-#include "systems/animation.h"
-#include "stageselect.h"
 
 struct CMenuShipSelectControlled : Component<CMenuShipSelectControlled> {
 };
 
+class Menu;
 class SMenuShipSelect : public System
 {
   Input* input;
-  Stage* stageScene;
-  StageSelect* stageSelectScene;
   Game* game;
+  Menu* menu;
+  int* selectedShip;
 
 public:
-  SMenuShipSelect(Input* _input, StageSelect* _stageSelectScene, Game* _game) : System()
+  SMenuShipSelect(Input* _input, int* _selectedShip, Menu* _menu, Game* _game)
+      : System()
   {
     System::addComponentType(CMenuShipSelectControlled::id);
     System::addComponentType(CSprite::id);
 
     this->input = _input;
-    this->stageSelectScene = _stageSelectScene;
+    this->menu = _menu;
+    this->selectedShip = _selectedShip;
     this->game = _game;
   }
   virtual void updateComponents(float delta, BaseComponent** components)
@@ -46,7 +47,8 @@ public:
     }
 
     if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
-      game->setScene(stageSelectScene);
+      *selectedShip = shipSprite->currentFrame;
+      game->nextScene((Scene*)menu);
     }
   }
 };
@@ -55,16 +57,15 @@ class Menu : public Scene
 {
 
   TextureManager backgroundTexture, spaceShipTexture, angleIconTexture,
-      promptTexture, gameTitleTexture, stagenumberTexture;
+      promptTexture, gameTitleTexture;
 
   // Systems
-  SAnimation* menuAnimation;
   SMenuShipSelect* menuShipSelect;
 
   // Components
   CSprite backgroundImage, shipSprite, rightKeySprite, leftKeySprite,
-      promptSprite, titleSprite, stageOneSprite;
-  CAnimated shipAnimation;
+      promptSprite, titleSprite;
+  CAnimated shipAnimation, titleAnimation;
   CMenuShipSelectControlled shipSelectControls;
 
   // Entities
@@ -72,11 +73,10 @@ class Menu : public Scene
   EntityHook spaceship;
   EntityHook title;
 
-  Stage* stageScene = new Stage();
-  StageSelect* stageSelectScene = new StageSelect();
+  int* selectedShip;
 
 public:
-  Menu() : Scene() {}
+  Menu(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip; }
   ~Menu()
   {
     backgroundTexture.onLostDevice();
@@ -89,15 +89,11 @@ public:
     promptTexture.onResetDevice();
     gameTitleTexture.onLostDevice();
     gameTitleTexture.onResetDevice();
-
-    stagenumberTexture.onLostDevice();
-    stagenumberTexture.onResetDevice();
   }
 
   void setupSystems()
   {
-    menuAnimation = new SAnimation();
-    menuShipSelect = new SMenuShipSelect(input, stageSelectScene, game);
+    menuShipSelect = new SMenuShipSelect(input, selectedShip, this, game);
   }
 
   void setupTextures()
@@ -112,9 +108,6 @@ public:
       Logger::error("Failed to load spacebar texture");
     if (!gameTitleTexture.initialise(graphics, GAME_LOGO))
       Logger::error("Failed to load game title texture");
-
-    if (!stagenumberTexture.initialise(graphics, STAGE_NUMBER))
-      Logger::error("Failed to load stage number texture");
   }
 
   void setupComponents()
@@ -137,11 +130,8 @@ public:
     shipSprite.setPosition(GAME_WIDTH / 2 - shipSprite.getWidth() / 2,
                            (GAME_HEIGHT / 2 - shipSprite.getHeight() / 2) + 70);
 
-	shipAnimation.animations.push_back(
+    shipAnimation.animations.push_back(
         {SCALE, 1.5, 1.7, 0.06, true, false, true});
-    /*shipAnimation.animationType = SCALE;
-    shipAnimation.startValue = 1.5, shipAnimation.endValue = 1.7,
-    shipAnimation.reverses = true, shipAnimation.rate = 0.06;*/
 
     // Setup GUI, etc
     titleSprite.startFrame = 0, titleSprite.endFrame = 2;
@@ -152,6 +142,10 @@ public:
     titleSprite.frameDelay = 0.1;
     titleSprite.setScale(0.7);
     titleSprite.setPosition(GAME_WIDTH / 2 - titleSprite.getWidth() / 2, 50);
+    titleSprite.alpha = 0.0;
+
+    titleAnimation.animations.push_back(
+        {ALPHA, 0, 1, 0.01, false, false, false});
 
     rightKeySprite.currentFrame = 1;
     rightKeySprite.animates = false;
@@ -178,13 +172,6 @@ public:
     promptSprite.setScale(0.7);
     promptSprite.setPosition(GAME_WIDTH / 2 - promptSprite.getWidth() / 2,
                              GAME_HEIGHT / 2 + promptSprite.getHeight() * 3);
-
-	stageOneSprite.currentFrame = 0;
-    stageOneSprite.animates = false;
-    stageOneSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
-                             STAGE_NUMBER_COLS, &stagenumberTexture);
-    stageOneSprite.setScale(0.5);
-    stageOneSprite.setPosition(GAME_WIDTH/2,GAME_HEIGHT/2);
   }
 
   void update(float delta) {}
@@ -199,37 +186,33 @@ public:
 
     promptSprite.spriteData.texture = promptSprite.textureManager->getTexture();
 
-	stageOneSprite.spriteData.texture =
-        stageOneSprite.textureManager->getTexture();
-
     graphics->spriteBegin();
 
     graphics->drawSprite(leftKeySprite.spriteData);
     graphics->drawSprite(rightKeySprite.spriteData);
     graphics->drawSprite(promptSprite.spriteData);
-    graphics->drawSprite(stageOneSprite.spriteData);
 
     graphics->spriteEnd();
   }
 
   void attach()
   {
-    gameSystems->addSystem(*menuAnimation);
     gameSystems->addSystem(*menuShipSelect);
-    background = ecs->makeEntity(backgroundImage);
+    background = ecs->makeEntity(backgroundImage, titleAnimation);
+    title = ecs->makeEntity(titleSprite, titleAnimation);
     spaceship = ecs->makeEntity(shipSprite, shipAnimation, shipSelectControls);
-    title = ecs->makeEntity(titleSprite);
     Scene::attach();
   }
 
   void detach()
   {
-
-    gameSystems->removeSystem(*menuAnimation);
     gameSystems->removeSystem(*menuShipSelect);
+    ecs->removeEntity(title);
     ecs->removeEntity(background);
     ecs->removeEntity(spaceship);
-    ecs->removeEntity(title);
+
+    delete menuShipSelect;
+
     Scene::detach();
   }
 };
