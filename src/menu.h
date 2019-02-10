@@ -38,12 +38,12 @@ public:
 
     if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
       if (shipSprite->currentFrame > shipSprite->startFrame)
-		PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
+		//PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         shipSprite->currentFrame -= 1;
       shipSprite->setRect();
     } else if (input->getKeyboardKeyState(VK_RIGHT) == JustPressed) {
       if (shipSprite->currentFrame < shipSprite->endFrame)
-		PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
+		//PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         shipSprite->currentFrame += 1;
       shipSprite->setRect();
     }
