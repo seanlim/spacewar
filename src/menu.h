@@ -38,17 +38,20 @@ public:
 
     if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
       if (shipSprite->currentFrame > shipSprite->startFrame)
+		//PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         shipSprite->currentFrame -= 1;
       shipSprite->setRect();
     } else if (input->getKeyboardKeyState(VK_RIGHT) == JustPressed) {
       if (shipSprite->currentFrame < shipSprite->endFrame)
+		//PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         shipSprite->currentFrame += 1;
       shipSprite->setRect();
     }
 
     if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
       *selectedShip = shipSprite->currentFrame;
-      game->nextScene((Scene*)menu);
+	  PlaySound(CHOOSE_SPACESHIP_AUDIO, NULL, SND_FILENAME | SND_SYNC);
+	  game->nextScene((Scene*)menu);
     }
   }
 };
@@ -76,7 +79,7 @@ class Menu : public Scene
   int* selectedShip;
 
 public:
-  Menu(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip; }
+  Menu(int* _selectedShip) : Scene() { PlaySound(MENU_SCREEN_AUDIO, NULL, SND_FILENAME | SND_LOOP | SND_ASYNC); this->selectedShip = _selectedShip; }
   ~Menu()
   {
     backgroundTexture.onLostDevice();
@@ -130,8 +133,8 @@ public:
     shipSprite.setPosition(GAME_WIDTH / 2 - shipSprite.getWidth() / 2,
                            (GAME_HEIGHT / 2 - shipSprite.getHeight() / 2) + 70);
 
-  //  shipAnimation.animations.push_back(
-//        {SCALE, 1.5, 1.7, 0.06, true, false, true});
+    Animation shipScale = {SCALE, 1.5, 1.7, 0.06, true, false, true};
+    shipAnimation.animations.push_back(shipScale);
 
     // Setup GUI, etc
     titleSprite.startFrame = 0, titleSprite.endFrame = 2;
@@ -144,8 +147,8 @@ public:
     titleSprite.setPosition(GAME_WIDTH / 2 - titleSprite.getWidth() / 2, 50);
     titleSprite.alpha = 0.0;
 
-  //  titleAnimation.animations.push_back(
-//        {ALPHA, 0, 1, 0.01, false, false, false});
+    Animation titlefadeIn = {ALPHA, 0, 1, 0.01, false, false, false};
+    titleAnimation.animations.push_back(titlefadeIn);
 
     rightKeySprite.currentFrame = 1;
     rightKeySprite.animates = false;

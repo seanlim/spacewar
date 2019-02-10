@@ -61,6 +61,7 @@ public:
       }
 
       if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
+		PlaySound(BULLET_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         bulletEmitter->firing = true;
       }
     }
