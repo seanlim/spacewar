@@ -22,6 +22,7 @@ public:
     System::addComponentType(CPlayerControlled::id);
     System::addComponentType(CMotion::id);
     System::addComponentType(CBulletEmitter::id);
+    System::addComponentType(CCollidable::id);
 
     input = _input;
   }
@@ -30,6 +31,7 @@ public:
     CPlayerControlled* playerControlled = (CPlayerControlled*)components[0];
     CMotion* motion = (CMotion*)components[1];
     CBulletEmitter* bulletEmitter = (CBulletEmitter*)components[2];
+    CCollidable* playerCollider = (CCollidable*)components[3];
 
     if (playerControlled->enabled) {
       if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
@@ -61,7 +63,7 @@ public:
       }
 
       if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
-		PlaySound(BULLET_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
+        PlaySound(BULLET_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         bulletEmitter->firing = true;
       }
     }
