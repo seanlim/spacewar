@@ -11,15 +11,15 @@
 
 class Stage : public Scene
 {
-  TextureManager backgroundTexture, planetTexture, shipTexture, bulletTexture, healthTexture,
-      enemyTexture, enemy2Texture, enemy3Texture;
+  TextureManager backgroundTexture, planetTexture, shipTexture, bulletTexture,
+      healthTexture, enemyTexture, enemy2Texture, enemy3Texture;
 
   SPlayerControlled* playerControlSystem;
   SEnemy* enemySystem;
   SBullet* bulletSystem;
 
-  CSprite backgroundSprite, planetSprite, shipSprite, bulletSprite, healthSprite, enemySprite,
-      enemy2Sprite, enemy3Sprite;
+  CSprite backgroundSprite, planetSprite, shipSprite, bulletSprite,
+      healthSprite, enemySprite, enemy2Sprite, enemy3Sprite;
   CMotion shipMotion, enemyMotion;
 
   CAnimated planetAnimation, shipAnimation;
@@ -30,14 +30,14 @@ class Stage : public Scene
 
   EntityHook backgroundEntity, planetEntity, shipEntity, healthEntity;
 
-  const int numberOfEnemies = 5;
+  const int numberOfEnemies = 1;
   Array<EntityHook> enemyHooks = {};
 
   int* selectedShip;
-  int healthBar;
+  int healthBar = 0;
 
 public:
-	Stage(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip;}
+  Stage(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip; }
   ~Stage();
 
   void setupSystems()
@@ -63,7 +63,7 @@ public:
     if (!enemy3Texture.initialise(graphics, ENEMY_THREE))
       Logger::error("Failed to load enemy3 texture");
     if (!healthTexture.initialise(graphics, HEALTH))
-		Logger::error("Failed to load health texture");
+      Logger::error("Failed to load health texture");
   }
 
   void setupComponents()
@@ -77,14 +77,14 @@ public:
     backgroundSprite.setScale(0.5);
     backgroundSprite.setPosition(0, 0);
 
-	// Health
-	healthSprite.startFrame = 0, healthSprite.endFrame = 6,
-		healthSprite.currentFrame = 0; 
-	healthSprite.animates = false;
-	healthSprite.initialise(HEALTH_WIDTH, HEALTH_HEIGHT,
-		HEALTH_COLS, &healthTexture);
-	healthSprite.setScale(0.7);
-	healthSprite.setPosition(0, GAME_HEIGHT - healthSprite.getHeight());
+    // Health
+    healthSprite.startFrame = 0, healthSprite.endFrame = 6,
+    healthSprite.currentFrame = 0;
+    healthSprite.animates = false;
+    healthSprite.initialise(HEALTH_WIDTH, HEALTH_HEIGHT, HEALTH_COLS,
+                            &healthTexture);
+    healthSprite.setScale(0.7);
+    healthSprite.setPosition(0, GAME_HEIGHT - healthSprite.getHeight());
 
     // Planet
     planetSprite.startFrame = 0, planetSprite.endFrame = 5,
@@ -98,13 +98,14 @@ public:
     planetSprite.alpha = 0.9;
     planetSprite.alpha = 0;
 
-    planetAnimation.animations.push_back(
-        {ROTATE, 0.0, 2 * PI, 0.00001, false, false, true});
-    planetAnimation.animations.push_back(
-        {ALPHA, 0.0, 0.8, 0.02, false, false, false});
-    planetAnimation.animations.push_back(
-        {SCALE, 0.0, 2, 0.02, false, false, false});
-	
+    Animation planetRotate = {ROTATE, 0.0, 2 * PI, 0.00001, false, false, true};
+    Animation planetFadeIn = {ALPHA, 0.0, 0.8, 0.02, false, false, false};
+    Animation planetScale = {SCALE, 0.0, 2, 0.02, false, false, false};
+
+    planetAnimation.animations.push_back(planetRotate);
+    planetAnimation.animations.push_back(planetFadeIn);
+    planetAnimation.animations.push_back(planetScale);
+
     // Ship
     shipSprite.startFrame = 0, shipSprite.endFrame = 9,
     shipSprite.currentFrame = *selectedShip;
@@ -117,8 +118,8 @@ public:
     shipBulletEmitter.firingRate = 1.0;
     playerControlled.speed = 80;
     playerControlled.sensitivity = 25;
-    shipAnimation.animations.push_back(
-        {SCALE, 1.5, 3.0, 0.05, true, false, false});
+    Animation shipScale = {SCALE, 1.5, 3.0, 0.05, true, false, false};
+    shipAnimation.animations.push_back(shipScale);
     shipCollider.collisionType = BOX;
     shipCollider.collisionResponse = NONE;
     shipBulletEmitter.emitterID = "ship";
@@ -140,8 +141,7 @@ public:
     enemySprite.initialise(ENEMY_WIDTH, ENEMY_WIDTH, ENEMY_COLS, &enemyTexture);
     enemySprite.setScale(2.5);
     // Hardcoding position
-    enemySprite.setPosition(GAME_WIDTH / 2 - enemySprite.getWidth() / 2,
-                            -enemySprite.getHeight());
+    enemySprite.setPosition(1, -enemySprite.getHeight());
     enemySprite.animates = true;
 
     enemy2Sprite.startFrame = 0, enemy2Sprite.endFrame = 1,
@@ -173,17 +173,18 @@ public:
     enemyBulletEmitter.velocity = Vec2(0, -300);
   }
 
-  void render() 
+  void render()
   {
-	  graphics->spriteBegin();
-	  healthSprite.spriteData.texture = healthSprite.textureManager->getTexture();
-	  graphics->drawSprite(healthSprite.spriteData);
-	  graphics->spriteEnd();
+    graphics->spriteBegin();
+    healthSprite.spriteData.texture = healthSprite.textureManager->getTexture();
+    graphics->drawSprite(healthSprite.spriteData);
+    graphics->spriteEnd();
   }
-  void update(float delta) 
+
+  void update(float delta)
   {
-	  healthSprite.currentFrame = healthBar;
-	  healthSprite.setRect();
+    healthSprite.currentFrame = healthBar;
+    healthSprite.setRect();
   }
 
   void attach()

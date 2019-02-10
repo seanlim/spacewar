@@ -38,7 +38,6 @@ public:
         enemy->enabled = false;
       }
     } else {
-      Logger::println("Enemy disabled");
       enemySprite->visible = false;
       enemyMotion->velocity = Vec2(0, 0),
       enemyMotion->acceleration = Vec2(0, 0);
