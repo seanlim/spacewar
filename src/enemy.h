@@ -5,107 +5,48 @@
 #include "ecs.h"
 #include "textureManager.h"
 
-struct CEnemyInteractable : public Component<CEnemyInteractable> {
-public:
+struct CEnemy : public Component<CEnemy> {
+  bool enabled = false;
 };
 
 class SEnemy : public System
 {
-private:
-  Graphics* graphics;
-  int MIN_MAX_RAND(int min, int max) { return rand() % (max - min + 1) + min; }
-
 public:
-  enum EnemyType { SMALL, MEDIUM, LARGE };
-
-  struct Enemy {
-    Vec2 enemyVelocity = Vec2(0, 100);
-    Vec2 enemyPosition;
-    EnemyType enemyType = SMALL;
-  };
-
-  CSprite *enemySprite, *enemy2Sprite, *enemy3Sprite;
-  CCollidable enemyCollider;
-
-  int numEnemies = 5;
-  Array<Enemy> enemies = {};
-
-  float timer = 0;
-
-  SEnemy(Graphics* _graphics) : System()
+  SEnemy() : System()
   {
+    System::addComponentType(CEnemy::id);
+    System::addComponentType(CSprite::id);
     System::addComponentType(CMotion::id);
     System::addComponentType(CCollidable::id);
-    System::addComponentType(CEnemyInteractable::id);
-
-    enemyCollider.collisionType = CIRCLE;
-    enemyCollider.collisionResponse = NONE;
-    this->graphics = _graphics;
-    init();
-  }
-
-  virtual void init()
-  {
-    Enemy newEnemy;
-
-    for (int i = 0; i < numEnemies; i++) enemies.push_back(newEnemy);
-    for (int i = 0; i < enemies.size(); i++)
-      enemies[i].enemyPosition = Vec2((rand() % GAME_WIDTH - 64), 0);
+    System::addComponentType(CBulletEmitter::id);
   }
 
   virtual void updateComponents(float delta, BaseComponent** components)
   {
-    CMotion* motion = (CMotion*)components[0];
-    CCollidable* collider = (CCollidable*)components[1];
-    CEnemyInteractable* enemyInteractable = (CEnemyInteractable*)components[2];
+    CEnemy* enemy = (CEnemy*)components[0];
+    CSprite* enemySprite = (CSprite*)components[1];
+    CMotion* enemyMotion = (CMotion*)components[2];
+    CCollidable* enemyCollider = (CCollidable*)components[3];
+    CBulletEmitter* enemyBulletEmitter = (CBulletEmitter*)components[4];
 
-    enemySprite->updateCurrentFrame(delta);
-    // enemy2Sprite->updateCurrentFrame(delta);
-    // enemy3Sprite->updateCurrentFrame(delta);
-
-    for (int i = 0; i < enemies.size(); i++) {
-      enemies[i].enemyPosition += enemies[i].enemyVelocity * delta;
-      enemySprite->setPosition(enemies[i].enemyPosition.x,
-                               enemies[i].enemyPosition.y);
-
-      // Draw enemies
-      switch (enemies[i].enemyType) {
-      case SMALL:
-        graphics->spriteBegin();
-        enemySprite->spriteData.texture =
-            enemySprite->textureManager->getTexture();
-        graphics->drawSprite(enemySprite->spriteData);
-        graphics->spriteEnd();
-        break;
-      case MEDIUM:
-        graphics->spriteBegin();
-        enemy2Sprite->spriteData.texture =
-            enemy2Sprite->textureManager->getTexture();
-        graphics->drawSprite(enemy2Sprite->spriteData);
-        graphics->spriteEnd();
-        break;
-      case LARGE:
-        graphics->spriteBegin();
-        enemy3Sprite->spriteData.texture =
-            enemy3Sprite->textureManager->getTexture();
-        graphics->drawSprite(enemy3Sprite->spriteData);
-        graphics->spriteEnd();
-        break;
+    if (enemy->enabled == true) {
+      updateEnemyMotion(enemyMotion);
+      // if (enemyCollider->colliding) {
+      //   enemy->enabled = false;
+      // }
+      if (enemyBulletEmitter->collidingWithBullet == true) {
+        enemy->enabled = false;
       }
-
-      // Check collision
-      enemyCollider.angle = enemySprite->getAngle();
-      enemyCollider.center = *enemySprite->getCenter();
-      enemyCollider.scale = enemySprite->getScale();
-
-      Vec2 collisionVector = Vec2(0, 0);
-      if (collider->collideBox(enemyCollider, collisionVector) == true) {
-        motion->collidedDelta =
-            collider->bounce(enemyCollider, collisionVector);
-        motion->colliding = true;
-
-        Logger::println("hel");
-      }
+    } else {
+      Logger::println("Enemy disabled");
+      enemySprite->visible = false;
+      enemyMotion->velocity = Vec2(0, 0),
+      enemyMotion->acceleration = Vec2(0, 0);
     }
+  }
+
+  void updateEnemyMotion(CMotion* enemyMotion)
+  {
+    enemyMotion->velocity = Vec2(0, 100);
   }
 };
