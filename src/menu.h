@@ -10,20 +10,24 @@
 struct CMenuShipSelectControlled : Component<CMenuShipSelectControlled> {
 };
 
+class Menu;
 class SMenuShipSelect : public System
 {
   Input* input;
-  Stage* stageScene;
   Game* game;
+  Menu* menu;
+  int* selectedShip;
 
 public:
-  SMenuShipSelect(Input* _input, Stage* _stageScene, Game* _game) : System()
+  SMenuShipSelect(Input* _input, int* _selectedShip, Menu* _menu, Game* _game)
+      : System()
   {
     System::addComponentType(CMenuShipSelectControlled::id);
     System::addComponentType(CSprite::id);
 
     this->input = _input;
-    this->stageScene = _stageScene;
+    this->menu = _menu;
+    this->selectedShip = _selectedShip;
     this->game = _game;
   }
   virtual void updateComponents(float delta, BaseComponent** components)
@@ -43,7 +47,8 @@ public:
     }
 
     if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
-      game->setScene(stageScene);
+      *selectedShip = shipSprite->currentFrame;
+      game->nextScene((Scene*)menu);
     }
   }
 };
@@ -68,10 +73,10 @@ class Menu : public Scene
   EntityHook spaceship;
   EntityHook title;
 
-  Stage* stageScene = new Stage();
+  int* selectedShip;
 
 public:
-  Menu() : Scene() {}
+  Menu(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip; }
   ~Menu()
   {
     backgroundTexture.onLostDevice();
@@ -88,7 +93,7 @@ public:
 
   void setupSystems()
   {
-    menuShipSelect = new SMenuShipSelect(input, stageScene, game);
+    menuShipSelect = new SMenuShipSelect(input, selectedShip, this, game);
   }
 
   void setupTextures()
@@ -201,11 +206,13 @@ public:
 
   void detach()
   {
-
     gameSystems->removeSystem(*menuShipSelect);
     ecs->removeEntity(title);
     ecs->removeEntity(background);
     ecs->removeEntity(spaceship);
+
+    delete menuShipSelect;
+
     Scene::detach();
   }
 };

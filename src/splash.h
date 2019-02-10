@@ -2,7 +2,6 @@
 
 #include "common.h"
 #include "ecs.h"
-#include "menu.h"
 #include "scene.h"
 #include "textureManager.h"
 
@@ -16,7 +15,6 @@ class SplashScreen : public Scene
   CAnimated logoAnimation;
 
 public:
-  Menu* menu = new Menu();
   SplashScreen() : Scene() {}
   ~SplashScreen() {}
   void setupSystems() {}
@@ -44,7 +42,7 @@ public:
   {
     timer += 0.01f / delta;
 
-    if (timer >= 450) game->setScene(menu);
+    if (timer >= 450) game->nextScene(this);
   }
   void render() {}
   void attach()

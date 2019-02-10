@@ -68,6 +68,8 @@ protected:
 
   Stack<Scene*> navigationStack;
 
+  void setScene(Scene* scene);
+
 public:
   Game();
   virtual ~Game();
@@ -87,7 +89,7 @@ public:
   virtual void renderGame();
   virtual void handleLostGraphicsDevice();
 
-  void setScene(Scene* scene);
+  virtual void nextScene(Scene* currentScene) = 0;
   void dismissCurrentScene();
 
   void exitGame();
