@@ -106,6 +106,36 @@ public:
     uint32 componentIDs[] = {A::id, B::id, C::id, D::id, E::id, F::id, G::id};
     return makeEntity(components, componentIDs, 7);
   }
+  template <class A, class B, class C, class D, class E, class F, class G,
+            class H>
+  EntityHook makeEntity(A& c1, B& c2, C& c3, D& c4, E& c5, F& c6, G& c7, H& c8)
+  {
+    BaseComponent* components[] = {&c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8};
+    uint32 componentIDs[] = {A::id, B::id, C::id, D::id,
+                             E::id, F::id, G::id, H::id};
+    return makeEntity(components, componentIDs, 8);
+  }
+  template <class A, class B, class C, class D, class E, class F, class G,
+            class H, class I>
+  EntityHook makeEntity(A& c1, B& c2, C& c3, D& c4, E& c5, F& c6, G& c7, H& c8,
+                        I& c9)
+  {
+    BaseComponent* components[] = {&c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9};
+    uint32 componentIDs[] = {A::id, B::id, C::id, D::id, E::id,
+                             F::id, G::id, H::id, I ::id};
+    return makeEntity(components, componentIDs, 9);
+  }
+  template <class A, class B, class C, class D, class E, class F, class G,
+            class H, class I, class J>
+  EntityHook makeEntity(A& c1, B& c2, C& c3, D& c4, E& c5, F& c6, G& c7, H& c8,
+                        I& c9, J& c10)
+  {
+    BaseComponent* components[] = {&c1, &c2, &c3, &c4, &c5,
+                                   &c6, &c7, &c8, &c9, &c10};
+    uint32 componentIDs[] = {A::id, B::id, C::id, D::id,  E::id,
+                             F::id, G::id, H::id, I ::id, J::id};
+    return makeEntity(components, componentIDs, 10);
+  }
 
   void removeEntity(EntityHook hook);
 

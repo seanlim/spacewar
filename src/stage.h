@@ -3,6 +3,7 @@
 #include "bullet.h"
 #include "common.h"
 #include "constants.h"
+#include "enemy.h"
 #include "input.h"
 #include "math/lerp.h"
 #include "playerControlled.h"
@@ -10,19 +11,27 @@
 
 class Stage : public Scene
 {
-  TextureManager backgroundTexture, planetTexture, shipTexture, bulletTexture, healthTexture;
+  TextureManager backgroundTexture, planetTexture, shipTexture, bulletTexture, healthTexture,
+      enemyTexture, enemy2Texture, enemy3Texture;
 
   SPlayerControlled* playerControlSystem;
+  SEnemy* enemySystem;
   SBullet* bulletSystem;
 
-  CSprite backgroundSprite, planetSprite, shipSprite, bulletSprite, healthSprite;
-  CMotion shipMotion;
+  CSprite backgroundSprite, planetSprite, shipSprite, bulletSprite, healthSprite, enemySprite,
+      enemy2Sprite, enemy3Sprite;
+  CMotion shipMotion, enemyMotion;
+
   CAnimated planetAnimation, shipAnimation;
   CPlayerControlled playerControlled;
-  CCollidable shipCollider;
-  CBulletEmitter shipBulletEmitter;
+  CCollidable shipCollider, enemyCollider;
+  CBulletEmitter shipBulletEmitter, enemyBulletEmitter;
+  CEnemy enemy;
 
   EntityHook backgroundEntity, planetEntity, shipEntity, healthEntity;
+
+  const int numberOfEnemies = 5;
+  Array<EntityHook> enemyHooks = {};
 
   int* selectedShip;
   int healthBar;
@@ -33,6 +42,7 @@ public:
 
   void setupSystems()
   {
+    enemySystem = new SEnemy();
     playerControlSystem = new SPlayerControlled(input);
     bulletSystem = new SBullet(graphics, game);
   }
@@ -46,13 +56,18 @@ public:
       Logger::error("Failed to load ship textures ");
     if (!bulletTexture.initialise(graphics, BULLET))
       Logger::error("Failed to load bullet texture");
-	if (!healthTexture.initialise(graphics, HEALTH))
+    if (!enemyTexture.initialise(graphics, ENEMY_ONE))
+      Logger::error("Failed to load enemy texture");
+    if (!enemy2Texture.initialise(graphics, ENEMY_TWO))
+      Logger::error("Failed to load enemy2 texture");
+    if (!enemy3Texture.initialise(graphics, ENEMY_THREE))
+      Logger::error("Failed to load enemy3 texture");
+    if (!healthTexture.initialise(graphics, HEALTH))
 		Logger::error("Failed to load health texture");
   }
 
   void setupComponents()
   {
-
     // Background
     backgroundSprite.startFrame = 0, backgroundSprite.endFrame = 0,
     backgroundSprite.currentFrame = 0;
@@ -106,16 +121,56 @@ public:
         {SCALE, 1.5, 3.0, 0.05, true, false, false});
     shipCollider.collisionType = BOX;
     shipCollider.collisionResponse = NONE;
+    shipBulletEmitter.emitterID = "ship";
     shipBulletEmitter.acceleration = Vec2(0.0, -50);
     shipBulletEmitter.velocity = Vec2(0.0, -300);
 
+    // Bullet
     bulletSprite.startFrame = 0, bulletSprite.endFrame = 1,
     bulletSprite.currentFrame = 0;
     bulletSprite.animates = false;
     bulletSprite.initialise(BULLET_WIDTH, BULLET_HEIGHT, BULLET_COLS,
                             &bulletTexture);
-    bulletSprite.setScale(1.5);
+    bulletSprite.setScale(0.3);
     bulletSystem->bulletSprite = bulletSprite;
+
+    // Enemies
+    enemySprite.startFrame = 0, enemySprite.endFrame = 1,
+    enemySprite.currentFrame = 0;
+    enemySprite.initialise(ENEMY_WIDTH, ENEMY_WIDTH, ENEMY_COLS, &enemyTexture);
+    enemySprite.setScale(2.5);
+    // Hardcoding position
+    enemySprite.setPosition(GAME_WIDTH / 2 - enemySprite.getWidth() / 2,
+                            -enemySprite.getHeight());
+    enemySprite.animates = true;
+
+    enemy2Sprite.startFrame = 0, enemy2Sprite.endFrame = 1,
+    enemy2Sprite.currentFrame = 0;
+    enemy2Sprite.initialise(ENEMY2_WIDTH, ENEMY2_HEIGHT, ENEMY2_COLS,
+                            &enemy2Texture);
+    enemy2Sprite.setScale(2.5);
+    // Hardcoding position
+    enemy2Sprite.setPosition(GAME_WIDTH / 2 - enemySprite.getWidth() / 2,
+                             -enemySprite.getHeight());
+
+    enemy2Sprite.animates = true;
+
+    enemy3Sprite.startFrame = 0, enemy3Sprite.endFrame = 1,
+    enemy3Sprite.currentFrame = 0;
+    enemy3Sprite.initialise(ENEMY3_WIDTH, ENEMY3_HEIGHT, ENEMY3_COLS,
+                            &enemy3Texture);
+    enemy3Sprite.setScale(2.5);
+    // Hardcoding position
+    enemy3Sprite.setPosition(GAME_WIDTH / 2 - enemySprite.getWidth() / 2,
+                             -enemySprite.getHeight());
+    enemy3Sprite.animates = true;
+
+    enemy.enabled = true;
+    enemyCollider.collisionType = BOX;
+    enemyCollider.collisionResponse = NONE;
+    enemyBulletEmitter.emitterID = "enemy";
+    enemyBulletEmitter.acceleration = Vec2(0, -50);
+    enemyBulletEmitter.velocity = Vec2(0, -300);
   }
 
   void render() 
@@ -133,23 +188,32 @@ public:
 
   void attach()
   {
+    gameSystems->addSystem(*enemySystem);
     gameSystems->addSystem(*playerControlSystem);
     backgroundEntity = ecs->makeEntity(backgroundSprite);
     planetEntity = ecs->makeEntity(planetSprite, planetAnimation);
     shipEntity = ecs->makeEntity(shipSprite, shipBulletEmitter, shipAnimation,
                                  shipMotion, shipCollider, playerControlled);
+    for (int i = 0; i < numberOfEnemies; i++) {
+      enemyHooks.push_back(ecs->makeEntity(enemy, enemySprite, enemyMotion,
+                                           enemyCollider, enemyBulletEmitter));
+    }
     graphicsSystems->addSystem(*bulletSystem);
     Scene::attach();
   }
   void detach()
   {
     graphicsSystems->removeSystem(*bulletSystem);
+    gameSystems->removeSystem(*enemySystem);
     gameSystems->removeSystem(*playerControlSystem);
     ecs->removeEntity(backgroundEntity);
     ecs->removeEntity(planetEntity);
     ecs->removeEntity(shipEntity);
+
     delete playerControlSystem;
     delete bulletSystem;
+    delete enemySystem;
+
     Scene::detach();
   }
 };
