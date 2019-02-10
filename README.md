@@ -1,3 +1,5 @@
+![](/assets/game.gif)
+
 Spacewar is a 2D C++ game built on the [ponyo](https://github.com/sean1188/ponyo) game engine.
 
 # Requirements
