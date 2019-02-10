@@ -66,3 +66,9 @@ const unsigned int HEALTH_HEIGHT = 47;
 const unsigned int BULLET_COLS = 1;
 const unsigned int BULLET_WIDTH = 47;
 const unsigned int BULLET_HEIGHT = 47;
+
+// Audio resources
+const char MENU_SCREEN_AUDIO[] = "assets\\menu_screen.wav";
+const char CHOOSE_SPACESHIP_AUDIO[] = "assets\\Choose_Spaceship.wav";
+const char CLICK_AUDIO[] = "assets\\Click.wav";
+const char BULLET_AUDIO[] = "assets\\bullet.wav";

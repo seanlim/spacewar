@@ -94,7 +94,7 @@ public:
           bulletEmitter->collidingWithBullet = true;
         }
       }
-
+	  PlaySound(BULLET_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
       graphics->spriteBegin();
       bulletSprite.spriteData.texture =
           bulletSprite.textureManager->getTexture();

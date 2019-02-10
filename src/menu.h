@@ -38,17 +38,20 @@ public:
 
     if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
       if (shipSprite->currentFrame > shipSprite->startFrame)
+		PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         shipSprite->currentFrame -= 1;
       shipSprite->setRect();
     } else if (input->getKeyboardKeyState(VK_RIGHT) == JustPressed) {
       if (shipSprite->currentFrame < shipSprite->endFrame)
+		PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
         shipSprite->currentFrame += 1;
       shipSprite->setRect();
     }
 
     if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
       *selectedShip = shipSprite->currentFrame;
-      game->nextScene((Scene*)menu);
+	  PlaySound(CHOOSE_SPACESHIP_AUDIO, NULL, SND_FILENAME | SND_SYNC);
+	  game->nextScene((Scene*)menu);
     }
   }
 };
@@ -76,7 +79,7 @@ class Menu : public Scene
   int* selectedShip;
 
 public:
-  Menu(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip; }
+  Menu(int* _selectedShip) : Scene() { PlaySound(MENU_SCREEN_AUDIO, NULL, SND_FILENAME | SND_LOOP | SND_ASYNC); this->selectedShip = _selectedShip; }
   ~Menu()
   {
     backgroundTexture.onLostDevice();
