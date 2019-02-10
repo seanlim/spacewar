@@ -73,5 +73,14 @@ public:
       graphics->drawSprite(bulletSprite.spriteData);
       graphics->spriteEnd();
     }
+
+	/*If bullet collides with playerShip. Example Code*/
+	/*
+	if (collide)
+	{
+		int currentHealth = healthbar + 1;
+		healthbar = currentHealth;
+	}
+	*/
   }
 };

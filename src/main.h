@@ -10,9 +10,10 @@ class Main : public Game
   // Breakout* breakout = new Breakout();
   SplashScreen* splash = new SplashScreen();
   Menu* menu = new Menu(&selectedShip);
-  Stage* stage = new Stage(&selectedShip);
+  Stage* stage = new Stage(&selectedShip, &healthBar);
 
   int selectedShip;
+  int healthBar;
 
 public:
   void setupRootScene()

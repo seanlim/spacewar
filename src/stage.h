@@ -25,9 +25,10 @@ class Stage : public Scene
   EntityHook backgroundEntity, planetEntity, shipEntity, healthEntity;
 
   int* selectedShip;
+  int* healthBar;
 
 public:
-  Stage(int* _selectedShip) : Scene() { this->selectedShip = _selectedShip; }
+	Stage(int* _selectedShip, int* _healthbar) : Scene() { this->selectedShip = _selectedShip; this->healthBar = _healthbar; }
   ~Stage();
 
   void setupSystems()
@@ -62,8 +63,8 @@ public:
     backgroundSprite.setPosition(0, 0);
 
 	// Health
-	healthSprite.startFrame = 0, healthSprite.endFrame = 0,
-		healthSprite.currentFrame = 0;
+	healthSprite.startFrame = 0, healthSprite.endFrame = 6,
+		healthSprite.currentFrame = 0; // *healthBar
 	healthSprite.animates = false;
 	healthSprite.initialise(HEALTH_WIDTH, HEALTH_HEIGHT,
 		HEALTH_COLS, &healthTexture);
