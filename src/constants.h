@@ -56,8 +56,6 @@ const unsigned int STAGE_NUMBER_COLS = 10;
 const unsigned int STAGE_NUMBER_WIDTH = 66;
 const unsigned int STAGE_NUMBER_HEIGHT = 64;
 
-const unsigned int GAME_LOGO_HEIGHT = 396;
-
 const unsigned int BULLET_COLS = 1;
 const unsigned int BULLET_WIDTH = 64;
 const unsigned int BULLET_HEIGHT = 64;

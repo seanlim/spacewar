@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "splash.h"
 #include "stage.h"
+#include "stageselect.h"
 
 class Main : public Game
 {
@@ -11,8 +12,10 @@ class Main : public Game
   SplashScreen* splash = new SplashScreen();
   Menu* menu = new Menu(&selectedShip);
   Stage* stage = new Stage(&selectedShip);
+  StageSelect* stageSelect = new StageSelect(&selectedStage); //selectedstage
 
-  int selectedShip;
+      int selectedShip;
+	int selectedStage;
 
 public:
   void setupRootScene()
@@ -24,9 +27,13 @@ public:
   void nextScene(Scene* currentScene)
   {
     if (currentScene == splash) {
-      this->setScene(menu);
-    } else if (currentScene == menu) {
+      this->setScene(stageSelect);
+
+    } else if (currentScene == stageSelect) {
+      this->setScene(menu);    
+	} 
+	else if (currentScene == menu) {
       this->setScene(stage);
-    }
+    } 
   }
 };
