@@ -44,7 +44,7 @@ public:
   {
     enemySystem = new SEnemy();
     playerControlSystem = new SPlayerControlled(input);
-    bulletSystem = new SBullet(graphics, game);
+    bulletSystem = new SBullet(graphics, game, selectedShip);
   }
   void setupTextures()
   {

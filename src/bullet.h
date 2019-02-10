@@ -25,12 +25,13 @@ class SBullet : public System
   };
   Graphics* graphics;
   Game* game;
+  int* selectedShip;
 
   Array<Bullet> bullets;
 
 public:
   CSprite bulletSprite;
-  SBullet(Graphics* _graphics, Game* _game) : System()
+  SBullet(Graphics* _graphics, Game* _game, int* _selectedShip) : System()
   {
     System::addComponentType(CBulletEmitter::id);
     System::addComponentType(CSprite::id);
@@ -38,6 +39,7 @@ public:
 
     this->graphics = _graphics;
     this->game = _game;
+	this->selectedShip = _selectedShip;
   }
   virtual void updateComponents(float delta, BaseComponent** components)
   {
@@ -52,11 +54,33 @@ public:
       newBullet.emitterID = bulletEmitter->emitterID;
       newBullet.velocity = bulletEmitter->velocity;
       newBullet.acceleration = bulletEmitter->acceleration;
-      newBullet.position = Vec2(sprite->getX() + sprite->getWidth() / 2,
-                                sprite->getY() - sprite->getHeight() / 2);
 
-      // Fire bullet
-      bullets.push_back(newBullet);
+	  if (*selectedShip != 4)
+	  {
+		  newBullet.position = Vec2(sprite->getX() + sprite->getWidth() / 2,
+			  sprite->getY() - sprite->getHeight() / 2);
+
+		  // Fire bullet
+		  bullets.push_back(newBullet);
+	  }
+
+	  else if (*selectedShip == 4)
+	  {
+		  newBullet.position = Vec2(sprite->getX() + (sprite->getWidth() / 2) / 2,
+			  sprite->getY() - sprite->getHeight() / 2);
+
+		  Bullet newBullet2 = Bullet();
+		  newBullet2.emitterID = bulletEmitter->emitterID;
+		  newBullet2.velocity = bulletEmitter->velocity;
+		  newBullet2.acceleration = bulletEmitter->acceleration;
+
+		  newBullet2.position = Vec2(sprite->getX() + sprite->getWidth() - (sprite->getWidth() / 2) / 2,
+			  sprite->getY() - sprite->getHeight() / 2);
+
+		  // Fire bullet
+		  bullets.push_back(newBullet);
+		  bullets.push_back(newBullet2);
+	  }
     }
 
     // Update all bullets
