@@ -34,17 +34,21 @@ public:
     CSprite* shipSprite = (CSprite*)components[1];
 
     if (input->getKeyboardKeyState(VK_LEFT) == JustPressed) {
-      if (shipSprite->currentFrame > shipSprite->startFrame)
-        shipSprite->currentFrame -= 1;
-      shipSprite->setRect();
+		if (shipSprite->currentFrame > shipSprite->startFrame)
+			PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
+			shipSprite->currentFrame -= 1;
+		shipSprite->setRect();
     } else if (input->getKeyboardKeyState(VK_RIGHT) == JustPressed) {
-      if (shipSprite->currentFrame < shipSprite->endFrame)
-        shipSprite->currentFrame += 1;
-      shipSprite->setRect();
+		if (shipSprite->currentFrame < shipSprite->endFrame)
+			PlaySound(CLICK_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
+			shipSprite->currentFrame += 1;
+		shipSprite->setRect();
     }
 
-    if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) {
-      game->setScene(stageScene);
+    if (input->getKeyboardKeyState(VK_SPACE) == JustPressed) 
+	{
+		PlaySound(CHOOSE_SPACESHIP_AUDIO, NULL, SND_FILENAME | SND_SYNC);
+		game->setScene(stageScene);
     }
   }
 };
@@ -73,7 +77,10 @@ class Menu : public Scene
   Stage* stageScene = new Stage();
 
 public:
-  Menu() : Scene() {}
+  Menu() : Scene() 
+  {
+	  PlaySound(MENU_SCREEN_AUDIO, NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
+  }
   ~Menu()
   {
     backgroundTexture.onLostDevice();

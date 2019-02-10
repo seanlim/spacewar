@@ -54,6 +54,8 @@ public:
 			{
 				bulletEmit->shooting = true;
 
+				PlaySound(BULLET_AUDIO, NULL, SND_FILENAME | SND_ASYNC);
+
 				if (bulletEmit->shooting == true)
 				{
 					bulletEmit->firingRate = 0.01f / delta;

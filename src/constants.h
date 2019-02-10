@@ -48,3 +48,9 @@ const unsigned int PROMPT_HEIGHT = 122;
 const unsigned int GAME_LOGO_COLS = 3;
 const unsigned int GAME_LOGO_WIDTH = 506;
 const unsigned int GAME_LOGO_HEIGHT = 396;
+
+// Audio resources
+const char MENU_SCREEN_AUDIO[] = "assets\\menu_screen.wav";
+const char CHOOSE_SPACESHIP_AUDIO[] = "assets\\Choose_Spaceship.wav";
+const char CLICK_AUDIO[] = "assets\\Click.wav";
+const char BULLET_AUDIO[] = "assets\\bullet.wav";

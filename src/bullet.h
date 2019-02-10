@@ -58,6 +58,8 @@ public:
 			bullets[i].position += bullets[i].velocity*delta;
 			bulletSprite.setPosition(bullets[i].position.x, bullets[i].position.y);
 			
+			//PlaySound(BULLET_AUDIO, NULL, SND_FILENAME | SND_SYNC);
+
 			graphics->spriteBegin();
 			bulletSprite.spriteData.texture =
 				bulletSprite.textureManager->getTexture();
