@@ -12,6 +12,7 @@ const char PROMPT[] = "assets\\prompt.png";
 const char ANGLE_ICON[] = "assets\\angle-icon.png";
 const char GAME_LOGO[] = "assets\\title.png";
 const char BULLET[] = "assets\\bullet.png";
+const char HEALTH[] = "assets\\health.png";
 
 const char ENGINE_LOGO[] = "assets\\ponyo.png";
 const float ENGINE_LOGO_WIDTH = 150;
@@ -52,3 +53,7 @@ const unsigned int GAME_LOGO_HEIGHT = 396;
 const unsigned int BULLET_COLS = 1;
 const unsigned int BULLET_WIDTH = 64;
 const unsigned int BULLET_HEIGHT = 64;
+
+const unsigned int HEALTH_COLS = 1;
+const unsigned int HEALTH_WIDTH = 283;
+const unsigned int HEALTH_HEIGHT = 47;

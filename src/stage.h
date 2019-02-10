@@ -10,19 +10,19 @@
 
 class Stage : public Scene
 {
-  TextureManager backgroundTexture, planetTexture, shipTexture, bulletTexture;
+  TextureManager backgroundTexture, planetTexture, shipTexture, bulletTexture, healthTexture;
 
   SPlayerControlled* playerControlSystem;
   SBullet* bulletSystem;
 
-  CSprite backgroundSprite, planetSprite, shipSprite, bulletSprite;
+  CSprite backgroundSprite, planetSprite, shipSprite, bulletSprite, healthSprite;
   CMotion shipMotion;
   CAnimated planetAnimation, shipAnimation;
   CPlayerControlled playerControlled;
   CCollidable shipCollider;
   CBulletEmitter shipBulletEmitter;
 
-  EntityHook backgroundEntity, planetEntity, shipEntity;
+  EntityHook backgroundEntity, planetEntity, shipEntity, healthEntity;
 
   int* selectedShip;
 
@@ -45,6 +45,8 @@ public:
       Logger::error("Failed to load ship textures ");
     if (!bulletTexture.initialise(graphics, BULLET))
       Logger::error("Failed to load bullet texture");
+	if (!healthTexture.initialise(graphics, HEALTH))
+		Logger::error("Failed to load health texture");
   }
 
   void setupComponents()
@@ -59,6 +61,15 @@ public:
     backgroundSprite.setScale(0.5);
     backgroundSprite.setPosition(0, 0);
 
+	// Health
+	healthSprite.startFrame = 0, healthSprite.endFrame = 0,
+		healthSprite.currentFrame = 0;
+	healthSprite.animates = false;
+	healthSprite.initialise(HEALTH_WIDTH, HEALTH_HEIGHT,
+		HEALTH_COLS, &healthTexture);
+	healthSprite.setScale(0.7);
+	healthSprite.setPosition(0, 0);
+
     // Planet
     planetSprite.startFrame = 0, planetSprite.endFrame = 5,
     planetSprite.currentFrame = 0;
@@ -71,13 +82,14 @@ public:
     planetSprite.alpha = 0.9;
     planetSprite.alpha = 0;
 
+	/*
     planetAnimation.animations.push_back(
         {ROTATE, 0.0, 2 * PI, 0.00001, false, false, true});
     planetAnimation.animations.push_back(
         {ALPHA, 0.0, 0.8, 0.02, false, false, false});
     planetAnimation.animations.push_back(
         {SCALE, 0.0, 2, 0.02, false, false, false});
-
+	*/
     // Ship
     shipSprite.startFrame = 0, shipSprite.endFrame = 9,
     shipSprite.currentFrame = *selectedShip;
@@ -90,8 +102,8 @@ public:
     shipBulletEmitter.firingRate = 1.0;
     playerControlled.speed = 80;
     playerControlled.sensitivity = 25;
-    shipAnimation.animations.push_back(
-        {SCALE, 1.5, 3.0, 0.05, true, false, false});
+//    shipAnimation.animations.push_back(
+  //      {SCALE, 1.5, 3.0, 0.05, true, false, false});
     shipCollider.collisionType = BOX;
     shipCollider.collisionResponse = NONE;
     shipBulletEmitter.acceleration = Vec2(0.0, -50);
@@ -113,6 +125,7 @@ public:
   {
     gameSystems->addSystem(*playerControlSystem);
     backgroundEntity = ecs->makeEntity(backgroundSprite);
+    healthEntity = ecs->makeEntity(healthSprite);
     planetEntity = ecs->makeEntity(planetSprite, planetAnimation);
     shipEntity = ecs->makeEntity(shipSprite, shipBulletEmitter, shipAnimation,
                                  shipMotion, shipCollider, playerControlled);
@@ -124,6 +137,7 @@ public:
     graphicsSystems->removeSystem(*bulletSystem);
     gameSystems->removeSystem(*playerControlSystem);
     ecs->removeEntity(backgroundEntity);
+    ecs->removeEntity(healthEntity);
     ecs->removeEntity(planetEntity);
     ecs->removeEntity(shipEntity);
     delete playerControlSystem;
