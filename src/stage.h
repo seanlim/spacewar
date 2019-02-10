@@ -41,6 +41,9 @@ public:
 	  // Enemy system
 	  enemySystem = new SEnemy(graphics);
 	  enemySystem->enemySprite = &enemySprite;
+	  enemySystem->enemy2Sprite = &enemy2Sprite;
+	  enemySystem->enemy3Sprite = &enemy3Sprite;
+	  enemySystem->enemyDestroyedSprite = &enemyDestroyedSprite;
 
 	  // Player controls
 	  playerControlSystem = new SPlayerControlled(input);
@@ -77,13 +80,13 @@ public:
 		  enemy2Sprite.currentFrame = 0;
 	  enemy2Sprite.initialise(32, 16, 2, &enemy2Texture);
 	  enemy2Sprite.setScale(2.5);
-	  enemySprite.animates = true;
+	  enemy2Sprite.animates = true;
 
 	  enemy3Sprite.startFrame = 0, enemy3Sprite.endFrame = 1,
 		  enemy3Sprite.currentFrame = 0;
 	  enemy3Sprite.initialise(32, 32, 2, &enemy3Texture);
 	  enemy3Sprite.setScale(2.5);
-	  enemySprite.animates = true;
+	  enemy3Sprite.animates = true;
 
 	  enemyDestroyedSprite.startFrame = 0, enemyDestroyedSprite.endFrame = 5,
 		  enemyDestroyedSprite.currentFrame = 0;
@@ -118,5 +121,7 @@ public:
 	  Scene::detach(); 
 	  graphicsSystems->removeSystem(*enemySystem);
 	  ecs->removeEntity(enemy);
+
+	  delete enemySystem;
   }
 };
