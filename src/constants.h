@@ -13,6 +13,16 @@ const char ANGLE_ICON[] = "assets\\angle-icon.png";
 const char GAME_LOGO[] = "assets\\title.png";
 const char BULLET[] = "assets\\bullet.png";
 const char HEALTH[] = "assets\\health.png";
+const char YELLOW_BOX[] = "assets\\yellowsquare.png";
+const char STAGE_NUMBER[] = "assets\\stagenumber.png";
+
+const unsigned int STAGE_NUMBER_COLS = 10;
+const unsigned int STAGE_NUMBER_WIDTH = 66;
+const unsigned int STAGE_NUMBER_HEIGHT = 64;
+
+const unsigned int YELLOWBOX_COL = 1;
+const unsigned int YELLOWBOX_WIDTH = 256;
+const unsigned int YELLOWBOX_HEIGHT = 256;
 
 const char ENGINE_LOGO[] = "assets\\ponyo.png";
 const float ENGINE_LOGO_WIDTH = 150;
@@ -57,7 +67,6 @@ const unsigned int PROMPT_HEIGHT = 122;
 const unsigned int GAME_LOGO_COLS = 3;
 const unsigned int GAME_LOGO_WIDTH = 506;
 const unsigned int GAME_LOGO_HEIGHT = 396;
-
 
 const unsigned int HEALTH_COLS = 1;
 const unsigned int HEALTH_WIDTH = 283;
