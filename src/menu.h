@@ -136,6 +136,9 @@ public:
     shipSprite.setScale(1.5);
     shipSprite.setPosition(GAME_WIDTH / 2 - shipSprite.getWidth() / 2,
                            (GAME_HEIGHT / 2 - shipSprite.getHeight() / 2) + 70);
+
+	shipAnimation.animations.push_back(
+        {SCALE, 1.5, 1.7, 0.06, true, false, true});
     /*shipAnimation.animationType = SCALE;
     shipAnimation.startValue = 1.5, shipAnimation.endValue = 1.7,
     shipAnimation.reverses = true, shipAnimation.rate = 0.06;*/

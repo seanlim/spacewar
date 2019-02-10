@@ -17,9 +17,17 @@ class SStageSelect : public System
   Input* input;
   Stage* stageScene;
   Game* game;
+  /*struct StageNumber 
+  {
+    Vec2 position;
+  };
+  Array<StageNumber> stagenumber;*/
 
 public:
   uint32* currentStageSelected;
+
+  //StageNumber stagenumber;
+
   SStageSelect(Input* _input, Stage* _stageScene, Game* _game) : System()
   {
     System::addComponentType(CStageSelectControlled::id);
@@ -69,9 +77,8 @@ class StageSelect : public Scene
   EntityHook title;
   EntityHook stagenumber;
 
-  Stage* stageScene = new Stage();
-  uint32 currentStageSelected = 0;
-  //int stagebutton[rows][columns];
+  Stage* stageScene = new Stage(); 
+  //uint32 currentStageSelected = 0;
 
 public:
   StageSelect() : Scene() {}
@@ -91,12 +98,7 @@ public:
   {
 
     stageSelect = new SStageSelect(input, stageScene, game);
-    stageSelect->currentStageSelected = &currentStageSelected;
-    /*for (int row = 0; row < rows; row++) {
-      for (int column = 0; column < columns; column++) {
-        stagebutton[row][column] = 1;
-      }
-    }*/
+    //stageSelect->currentStageSelected = &currentStageSelected;
 
   }
   void setupTextures()
@@ -125,17 +127,28 @@ public:
     stagenumberSprite.startFrame = 0, stagenumberSprite.endFrame = 9,
     stagenumberSprite.currentFrame = 0;
     stagenumberSprite.animates = false;
+
+    for (int i = 0; i < (stagenumberSprite.endFrame + 1); i++)
+    {
+      stagenumberSprite.currentFrame = i;
+      stagenumberSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
+                                   STAGE_NUMBER_COLS, &stagenumberTexture);
+      stagenumberSprite.setScale(1.5);
+      stagenumberSprite.setPosition((GAME_WIDTH / 11) * (i+1) ,
+                                    GAME_HEIGHT / 2);
+      stagenumberAnimation.animations.push_back(
+          {SCALE, 1.5, 1.7, 0.06, true, false, true});
+    }
+    
+	/*stagenumberSprite.currentFrame = 0;
+    stagenumberSprite.animates = false;
     stagenumberSprite.initialise(STAGE_NUMBER_WIDTH, STAGE_NUMBER_HEIGHT,
                                  STAGE_NUMBER_COLS, &stagenumberTexture);
     stagenumberSprite.setScale(1.5);
     stagenumberSprite.setPosition(
         GAME_WIDTH / 2 - stagenumberSprite.getWidth() / 2,
-        (GAME_HEIGHT / 2 - stagenumberSprite.getHeight() / 2) + 70);
+        (GAME_HEIGHT / 2 - stagenumberSprite.getHeight() / 2) + 70);*/
 
-
-	/*stagenumberAnimation.animationType = SCALE;
-    stagenumberAnimation.startValue = 1.5, stagenumberAnimation.endValue = 1.7,
-    stagenumberAnimation.reverses = true, stagenumberAnimation.rate = 0.06;*/
 
 	titleSprite.startFrame = 0, titleSprite.endFrame = 2;
     titleSprite.currentFrame = 0;
@@ -158,6 +171,7 @@ public:
 	/*for (int column = 0; column < columns; column++) {
       for (int row = 0; row < rows; row++) {
 
+		stagenumberSprite.currentFrame = currentStageSelected;
         stagenumberSprite.setPosition((GAME_WIDTH/6)*column,
                                (GAME_LOGO_HEIGHT/2)*row);
         currentStageSelected = currentStageSelected + 1;
@@ -171,7 +185,7 @@ public:
           graphics->spriteEnd();
 		  }
 		}
-	  }
+	  }*/
 
     /*for (int i = 0; i < STAGE_NUMBER_COLS + 1; i++)
     {
